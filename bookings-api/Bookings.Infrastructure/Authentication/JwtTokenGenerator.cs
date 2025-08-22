@@ -1,4 +1,5 @@
 ﻿using Bookings.Application.Common.Interfaces.Authentication;
+using Bookings.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -18,7 +19,7 @@ namespace Bookings.Infrastructure.Authentication
             _jwtSettings = jwtOptions.Value;
         }
 
-        public string GenerateToken(Guid userId, string name)
+        public string GenerateToken(User user)
         {
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(
@@ -27,8 +28,8 @@ namespace Bookings.Infrastructure.Authentication
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
-                new Claim(JwtRegisteredClaimNames.GivenName, name),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Name, user.Name),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
