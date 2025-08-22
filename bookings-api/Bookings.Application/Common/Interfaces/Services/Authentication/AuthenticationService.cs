@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Bookings.Application.Services.Authentication
+namespace Bookings.Application.Common.Interfaces.Services.Authentication
 {
     public class AuthenticationService : IAuthenticationService
     {

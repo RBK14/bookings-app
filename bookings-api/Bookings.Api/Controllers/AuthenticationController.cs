@@ -1,4 +1,4 @@
-﻿using Bookings.Application.Services.Authentication;
+﻿using Bookings.Application.Common.Interfaces.Services.Authentication;
 using Bookings.Contracts.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
