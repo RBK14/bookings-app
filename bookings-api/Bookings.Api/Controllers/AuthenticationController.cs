@@ -25,10 +25,10 @@ namespace Bookings.Api.Controllers
                 request.Password);
 
             var response = new AuthenticationResponse(
-                authResult.Id,
-                authResult.Name,
-                authResult.Phone,
-                authResult.Email,
+                authResult.User.Id,
+                authResult.User.Name,
+                authResult.User.Phone,
+                authResult.User.Email,
                 authResult.Token);
 
             return Ok(response);
@@ -42,10 +42,10 @@ namespace Bookings.Api.Controllers
                 request.Password);
 
             var response = new AuthenticationResponse(
-                authResult.Id,
-                authResult.Name,
-                authResult.Phone,
-                authResult.Email,
+                authResult.User.Id,
+                authResult.User.Name,
+                authResult.User.Phone,
+                authResult.User.Email,
                 authResult.Token);
 
             return Ok(response);
