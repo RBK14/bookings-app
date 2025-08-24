@@ -1,4 +1,4 @@
-﻿using Bookings.Application.Common.Services.Authentication;
+﻿
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Bookings.Application
@@ -7,7 +7,8 @@ namespace Bookings.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddMediatR(cfg =>
+                cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
 
             return services;
         }
