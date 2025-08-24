@@ -1,12 +1,14 @@
-﻿namespace Bookings.Application.Common.Services.Authentication
+﻿using ErrorOr;
+
+namespace Bookings.Application.Common.Services.Authentication
 {
     public interface IAuthenticationService
     {
-        AuthenticationResult Login(
+       ErrorOr<AuthenticationResult> Login(
             string email,
             string password);
 
-        AuthenticationResult Register(
+       ErrorOr<AuthenticationResult> Register(
             string name,
             string phone,
             string email,
