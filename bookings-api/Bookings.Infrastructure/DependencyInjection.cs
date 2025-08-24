@@ -1,5 +1,6 @@
 ﻿using Bookings.Application.Common.Interfaces.Authentication;
 using Bookings.Application.Common.Interfaces.Persistence;
+using Bookings.Application.Common.Interfaces.Services;
 using Bookings.Infrastructure.Authentication;
 using Bookings.Infrastructure.Persistence;
 using Bookings.Infrastructure.Services;

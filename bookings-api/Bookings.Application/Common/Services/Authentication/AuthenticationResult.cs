@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bookings.Application.Common.Interfaces.Services.Authentication
+namespace Bookings.Application.Common.Services.Authentication
 {
     public record AuthenticationResult(
         User User,

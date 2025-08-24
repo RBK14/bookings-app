@@ -1,4 +1,5 @@
 ﻿using Bookings.Application.Common.Interfaces.Authentication;
+using Bookings.Application.Common.Interfaces.Services;
 using Bookings.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

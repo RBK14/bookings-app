@@ -1,5 +1,5 @@
-﻿using Bookings.Application.Common.Interfaces.Authentication;
-using Bookings.Application.Common.Interfaces.Persistence;
+﻿using Bookings.Application.Common.Interfaces.Persistence;
+using Bookings.Application.Common.Interfaces.Services;
 using Bookings.Domain.Entities;
 using Bookings.Domain.Enums;
 using System;
@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Bookings.Application.Common.Interfaces.Services.Authentication
+namespace Bookings.Application.Common.Services.Authentication
 {
     public class AuthenticationService : IAuthenticationService
     {

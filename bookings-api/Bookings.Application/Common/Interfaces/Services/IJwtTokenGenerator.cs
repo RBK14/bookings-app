@@ -1,6 +1,6 @@
 ﻿using Bookings.Domain.Entities;
 
-namespace Bookings.Application.Common.Interfaces.Authentication
+namespace Bookings.Application.Common.Interfaces.Services
 {
     public interface IJwtTokenGenerator
     {

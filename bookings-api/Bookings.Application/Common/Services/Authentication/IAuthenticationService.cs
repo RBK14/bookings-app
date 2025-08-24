@@ -1,4 +1,4 @@
-﻿namespace Bookings.Application.Common.Interfaces.Services.Authentication
+﻿namespace Bookings.Application.Common.Services.Authentication
 {
     public interface IAuthenticationService
     {
