@@ -5,8 +5,9 @@ using MediatR;
 namespace Bookings.Application.Authentication.Commands.Register
 {
     public record RegisterCommand(
-        string Name,
-        string Phone,
+        string FirstName,
+        string LastName,
         string Email,
-        string Password) : IRequest<ErrorOr<AuthenticationResult>>;
+        string Password,
+        string Phone) : IRequest<ErrorOr<AuthenticationResult>>;
 }

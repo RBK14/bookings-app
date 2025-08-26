@@ -1,8 +1,9 @@
 ﻿namespace Bookings.Contracts.Authentication
 {
     public record RegisterRequest(
-        string Name,
-        string Phone,
+        string FirstName,
+        string LastName,
         string Email,
-        string Password);
+        string Password,
+        string Phone);
 }

@@ -1,10 +1,10 @@
 ﻿using Bookings.Application.Common.Interfaces.Persistence;
 using Bookings.Application.Common.Interfaces.Services;
 using Bookings.Application.Authentication.Common;
-using Bookings.Domain.Entities;
 using Bookings.Domain.Common.Errors;
 using ErrorOr;
 using MediatR;
+using Bookings.Domain.UserAggregate;
 
 namespace Bookings.Application.Authentication.Queries.Login
 {

@@ -1,10 +1,10 @@
 ﻿using Bookings.Application.Common.Interfaces.Persistence;
 using Bookings.Application.Common.Interfaces.Services;
-using Bookings.Domain.Entities;
 using Bookings.Domain.Common.Errors;
 using ErrorOr;
 using MediatR;
 using Bookings.Application.Authentication.Common;
+using Bookings.Domain.UserAggregate;
 
 namespace Bookings.Application.Authentication.Commands.Register
 {
@@ -25,8 +25,9 @@ namespace Bookings.Application.Authentication.Commands.Register
                 return Errors.User.DuplicateEmail;
 
             // Create user & persist to the DB
-            var user = new User(
-                command.Name,
+            var user = User.CreateUnique(
+                command.FirstName,
+                command.LastName,
                 command.Phone,
                 command.Email,
                 command.Password);

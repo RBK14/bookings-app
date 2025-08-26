@@ -1,8 +1,9 @@
 ﻿namespace Bookings.Contracts.Authentication
 {
     public record AuthenticationResponse(
-        Guid Id,
-        string Name,
+        string Id,
+        string FirstName,
+        string LastName,
         string Phone,
         string Email,
         string Token);

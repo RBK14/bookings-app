@@ -1,5 +1,5 @@
 ﻿using Bookings.Application.Common.Interfaces.Persistence;
-using Bookings.Domain.Entities;
+using Bookings.Domain.UserAggregate;
 
 namespace Bookings.Infrastructure.Persistence
 {
@@ -13,7 +13,7 @@ namespace Bookings.Infrastructure.Persistence
 
         public User? GetUserByEmail(string email)
         {
-             return _users.SingleOrDefault(u => u.Email == email);
+             return _users.SingleOrDefault(u => u.Email.Value == email);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Bookings.Domain.Entities;
+﻿using Bookings.Domain.UserAggregate;
 
 namespace Bookings.Application.Authentication.Common
 {
