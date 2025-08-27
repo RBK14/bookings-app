@@ -1,8 +1,4 @@
-﻿
-using Bookings.Application.Authentication.Commands.Register;
-using Bookings.Application.Authentication.Common;
-using Bookings.Application.Common.Behaviors;
-using ErrorOr;
+﻿using Bookings.Application.Common.Behaviors;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
