@@ -11,12 +11,12 @@ namespace Bookings.Domain.ClientAggregate
     {
         private readonly List<AppointmentId> _appointmentIds = new();
 
-        public UserId UserId { get; }
+        public UserId UserId { get; init; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
         public Phone Phone { get; private set; }
-        public IReadOnlyList<AppointmentId> Appointments => _appointmentIds.AsReadOnly();
-        public DateTime CreatedAt { get; }
+        public IReadOnlyList<AppointmentId> AppointmentIds => _appointmentIds.AsReadOnly();
+        public DateTime CreatedAt { get; init; }
         public DateTime UpdatedAt { get; private set; }
 
         private Client(
@@ -84,5 +84,11 @@ namespace Bookings.Domain.ClientAggregate
             UpdatedAt = DateTime.UtcNow;
             return this;
         }
+
+#pragma warning disable CS8618
+        private Client()
+        {
+        }
+#pragma warning restore CS8618
     }
 }

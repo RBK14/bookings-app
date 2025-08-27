@@ -11,19 +11,19 @@ namespace Bookings.Domain.AppointmentAggregate
 {
     public class Appointment : AggregateRoot<AppointmentId>
     {
-        public OfferId OfferId { get; }
+        public OfferId OfferId { get; init; }
 
         // Snapshot of the offer
-        public string OfferName { get; }
-        public Price OfferPrice { get; }
-        public Duration OfferDuration { get; }
+        public string OfferName { get; init; }
+        public Price OfferPrice { get; init; }
+        public Duration OfferDuration { get; init; }
 
-        public EmployeeId EmployeeId { get; }
-        public ClientId ClientId { get; }
+        public EmployeeId EmployeeId { get; init; }
+        public ClientId ClientId { get; init; }
         public AppointmentTime Time { get; private set; }
         public AppointmentStatus Status { get; private set; }
         public CancellationBy CancelledBy { get; private set; }
-        public DateTime CreatedAt { get; }
+        public DateTime CreatedAt { get; init; }
         public DateTime UpdatedAt { get; private set; }
 
         private Appointment (
@@ -79,7 +79,6 @@ namespace Bookings.Domain.AppointmentAggregate
                 DateTime.UtcNow);
         }
 
-        // Appointment Status Management
         public Appointment Confirm()
         {
             if (Status != AppointmentStatus.Pending)
@@ -124,12 +123,17 @@ namespace Bookings.Domain.AppointmentAggregate
             return this;
         }
 
-        // Appointment Time Management
         public Appointment UpdateTime(DateTime start, DateTime end)
         {
             Time = AppointmentTime.CreateFixed(start, end);
             UpdatedAt = DateTime.UtcNow;
             return this;
         }
+
+#pragma warning disable CS8618
+        private Appointment()
+        {
+        }
+#pragma warning restore CS8618
     }
 }

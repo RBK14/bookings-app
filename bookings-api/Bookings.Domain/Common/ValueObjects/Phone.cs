@@ -10,7 +10,7 @@ namespace Bookings.Domain.Common.ValueObjects
             @"^\+?[1-9]\d{7,14}$",
             RegexOptions.Compiled);
 
-        public string Value { get; }
+        public string Value { get; init; }
 
         private Phone(string value)
         {
@@ -32,5 +32,11 @@ namespace Bookings.Domain.Common.ValueObjects
         {
             yield return Value;
         }
+
+#pragma warning disable CS8618
+        private Phone()
+        {
+        }
+#pragma warning restore CS8618
     }
 }

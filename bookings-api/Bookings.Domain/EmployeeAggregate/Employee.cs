@@ -13,13 +13,13 @@ namespace Bookings.Domain.EmployeeAggregate
         private readonly List<OfferId> _offerIds = new();
         private readonly List<AppointmentId> _appointmentIds = new();
 
-        public UserId UserId { get; }
+        public UserId UserId { get; init; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
         public Phone Phone { get; private set; }
-        public IReadOnlyList<OfferId> Offers => _offerIds.AsReadOnly();
-        public IReadOnlyList<AppointmentId> Appointments => _appointmentIds.AsReadOnly();
-        public DateTime CreatedAt { get; }
+        public IReadOnlyList<OfferId> OfferIds => _offerIds.AsReadOnly();
+        public IReadOnlyList<AppointmentId> AppointmentIds => _appointmentIds.AsReadOnly();
+        public DateTime CreatedAt { get; init; }
         public DateTime UpdatedAt { get; private set; }
 
         private Employee(
@@ -87,5 +87,11 @@ namespace Bookings.Domain.EmployeeAggregate
             UpdatedAt = DateTime.UtcNow;
             return this;
         }
+
+#pragma warning disable CS8618
+        private Employee()
+        {
+        }
+#pragma warning restore CS8618
     }
 }

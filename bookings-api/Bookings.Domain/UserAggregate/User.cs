@@ -13,7 +13,8 @@ namespace Bookings.Domain.UserAggregate
         public string Password { get; private set; }
         public Phone Phone { get; private set; }
         public bool IsEmailConfirmed { get; private set; }
-        public DateTime CreatedAt { get; private set; }
+        public string? ConfirmationCode { get; private set; }
+        public DateTime CreatedAt { get; init; }
         public DateTime UpdatedAt { get; private set; }
 
         private User(
@@ -24,6 +25,7 @@ namespace Bookings.Domain.UserAggregate
             string password,
             Phone phone,
             bool isEmailConfirmed,
+            string? confirmationCode,
             DateTime createdAt,
             DateTime updatedAt) : base(userId)
         {
@@ -33,6 +35,7 @@ namespace Bookings.Domain.UserAggregate
             Password = password;
             Phone = phone;
             IsEmailConfirmed = isEmailConfirmed;
+            ConfirmationCode = confirmationCode;
             CreatedAt = createdAt;
             UpdatedAt = updatedAt;
         }
@@ -61,6 +64,7 @@ namespace Bookings.Domain.UserAggregate
                 password,
                 Phone.Create(phone),
                 false,
+                null,
                 DateTime.UtcNow,
                 DateTime.UtcNow);
         }
@@ -115,5 +119,11 @@ namespace Bookings.Domain.UserAggregate
             UpdatedAt = DateTime.UtcNow;
             return this;
         }
+
+#pragma warning disable CS8618
+        private User()
+        {
+        }
+#pragma warning restore CS8618
     }
 }

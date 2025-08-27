@@ -10,7 +10,7 @@ namespace Bookings.Domain.UserAggregate.ValueObjects
             @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        public string Value { get; }
+        public string Value { get; init; }
 
         private Email(string value)
         {
@@ -25,14 +25,20 @@ namespace Bookings.Domain.UserAggregate.ValueObjects
             //if (!_regex.IsMatch(email))
             //    throw new DomainException("Nieprawidłowy adres email.");
 
-            var normalized = email.Trim().ToLowerInvariant();
+            
 
-            return new Email(normalized);
+            return new Email(email);
         }
 
         public override IEnumerable<object> GetEqualityComponents()
         {
             yield return Value;
         }
+
+#pragma warning disable CS8618
+        private Email()
+        {
+        }
+#pragma warning restore CS8618
     }
 }

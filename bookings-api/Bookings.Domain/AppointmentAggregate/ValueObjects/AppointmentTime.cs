@@ -6,8 +6,8 @@ namespace Bookings.Domain.AppointmentAggregate.ValueObjects
 {
     public class AppointmentTime : ValueObject
     {
-        public DateTime Start { get; }
-        public DateTime End { get; }
+        public DateTime Start { get; init; }
+        public DateTime End { get; init; }
 
         private AppointmentTime(DateTime start, DateTime end)
         {
@@ -18,12 +18,12 @@ namespace Bookings.Domain.AppointmentAggregate.ValueObjects
         public static AppointmentTime Create(DateTime start, Duration duration)
         {
             if (duration is null)
-                throw new DomainException("Czas trwania wizyty nie może być pusty.");
+                throw new DomainException("Duration cannot be empty.");
 
             var end = start.Add(duration.Value);
 
             if (end <= start)
-                throw new DomainException("Godzina zakończenia musi być późniejsza niż rozpoczęcia.");
+                throw new DomainException("Start hour must be before end hour.");
 
             return new AppointmentTime(start, end);
         }
@@ -31,7 +31,7 @@ namespace Bookings.Domain.AppointmentAggregate.ValueObjects
         public static AppointmentTime CreateFixed(DateTime start, DateTime end)
         {
             if (end <= start)
-                throw new DomainException("Godzina zakończenia musi być późniejsza niż rozpoczęcia.");
+                throw new DomainException("Start hour must be before end hour.");
 
             return new(start, end);
         }
@@ -41,5 +41,11 @@ namespace Bookings.Domain.AppointmentAggregate.ValueObjects
             yield return Start;
             yield return End;
         }
+
+#pragma warning disable CS8618
+        private AppointmentTime()
+        {
+        }
+#pragma warning restore CS8618
     }
 }

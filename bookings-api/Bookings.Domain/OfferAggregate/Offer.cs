@@ -4,6 +4,7 @@ using Bookings.Domain.Common.Exceptions;
 using Bookings.Domain.Common.Models;
 using Bookings.Domain.Common.ValueObjects;
 using Bookings.Domain.EmployeeAggregate.ValueObjects;
+using Bookings.Domain.OfferAggregate.Events;
 using Bookings.Domain.OfferAggregate.ValueObjects;
 
 namespace Bookings.Domain.OfferAggregate
@@ -14,11 +15,11 @@ namespace Bookings.Domain.OfferAggregate
 
         public string Name { get; private set; }
         public string Description { get; private set; }
-        public EmployeeId EmployeeId { get; }
+        public EmployeeId EmployeeId { get; init; }
         public Price Price { get; private set; }
         public Duration Duration { get; private set; }
-        public IReadOnlyList<AppointmentId> Appointments => _appointmentIds.AsReadOnly();
-        public DateTime CreatedAt { get; }
+        public IReadOnlyList<AppointmentId> AppointmentIds => _appointmentIds.AsReadOnly();
+        public DateTime CreatedAt { get; init; }
         public DateTime UpdatedAt { get; private set; }
 
         private Offer (
@@ -40,7 +41,7 @@ namespace Bookings.Domain.OfferAggregate
             UpdatedAt = updatedAt;
         }
 
-        public static Offer CreateUnique(
+        public static Offer Create(
             string name,
             string description,
             EmployeeId employeeId,
@@ -54,7 +55,7 @@ namespace Bookings.Domain.OfferAggregate
             if (string.IsNullOrWhiteSpace(description))
                 throw new DomainException("Opis wizyty nie może być pusty.");
 
-            return new Offer(
+            var offer = new Offer(
                 OfferId.CreateUnique(),
                 name,
                 description,
@@ -63,6 +64,10 @@ namespace Bookings.Domain.OfferAggregate
                 Duration.Create(duration),
                 DateTime.UtcNow,
                 DateTime.UtcNow);
+
+            offer.AddDomainEvent(new OfferCreatedEvent(offer));
+
+            return offer;
         }
 
         public Offer UpdateName(string name)
@@ -91,5 +96,11 @@ namespace Bookings.Domain.OfferAggregate
             UpdatedAt = DateTime.UtcNow;
             return this;
         }
+
+#pragma warning disable CS8618
+        private Offer()
+        {
+        }
+#pragma warning restore CS8618
     }
 }

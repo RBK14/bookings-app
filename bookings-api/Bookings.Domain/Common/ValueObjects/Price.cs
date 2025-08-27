@@ -6,8 +6,8 @@ namespace Bookings.Domain.Common.ValueObjects
 {
     public sealed class Price : ValueObject
     {
-        public decimal Amount { get; }
-        public Currency Currency { get; }
+        public decimal Amount { get; init; }
+        public Currency Currency { get; init; }
 
         private Price(decimal amount, Currency currency)
         {
@@ -28,5 +28,11 @@ namespace Bookings.Domain.Common.ValueObjects
             yield return Amount;
             yield return Currency;
         }
+
+#pragma warning disable CS8618
+        private Price()
+        {
+        }
+#pragma warning restore CS8618
     }
 }
