@@ -1,4 +1,5 @@
 ﻿using Bookings.Application.Offers.Commands.CreateOffer;
+using Bookings.Application.Offers.Queries.GetOfferById;
 using Bookings.Application.Offers.Queries.GetOffers;
 using Bookings.Contracts.Offers;
 using MapsterMapper;
@@ -22,6 +23,34 @@ namespace Bookings.Api.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetOffers()
+        {
+            var query = new GetOffersQuery();
+
+            var result = await _mediator.Send(query);
+
+            var offerResponses = new List<OfferResponse>();
+
+            foreach (var offer in result)
+                offerResponses.Add(_mapper.Map<OfferResponse>(offer));
+
+            return Ok(offerResponses);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetOfferById(string id)
+        {
+            var query = new GetOfferByIdQuery(id);
+
+            var result = await _mediator.Send(query);
+
+            return result.Match(
+                offer => Ok(_mapper.Map<OfferResponse>(offer)),
+                errors => Problem(errors)
+            );
+        }
+
         [HttpPost("create")]
         public async Task<IActionResult> CreateOffer(CreateOfferRequest request)
         {
@@ -38,25 +67,8 @@ namespace Bookings.Api.Controllers
 
             return result.Match(
                 offer => Ok(_mapper.Map<OfferResponse>(offer)),
-                errors => Problem(errors));
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetOffers()
-        {
-            var query = new GetOffersQuery();
-
-            var offers = await _mediator.Send(query);
-
-            var offerResponses = new List<OfferResponse>();
-
-            foreach (var offer in offers)
-            {
-                var offerResponse = _mapper.Map<OfferResponse>(offer);
-                offerResponses.Add(offerResponse);
-            }
-
-            return Ok(offerResponses);
+                errors => Problem(errors)
+            );
         }
     }
 }

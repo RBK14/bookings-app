@@ -1,4 +1,5 @@
 ﻿using Bookings.Domain.OfferAggregate;
+using Bookings.Domain.OfferAggregate.ValueObjects;
 
 namespace Bookings.Application.Common.Interfaces.Persistence
 {
@@ -7,5 +8,7 @@ namespace Bookings.Application.Common.Interfaces.Persistence
         Task AddAsync(Offer offer);
 
         Task<IEnumerable<Offer>> GetOffersAsync();
+
+        Task<Offer?> GetByIdAsync(OfferId offerId);
     }
 }
