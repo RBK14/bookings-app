@@ -20,21 +20,18 @@ namespace Bookings.Application.Authentication.Commands.Register
         }
         public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
         {
-            // Validate the user doesn't exists
-            if (_userRepository.GetUserByEmail(command.Email) is not null)
+            if (await _userRepository.GetUserByEmailAsync(command.Email) is not null)
                 return Errors.User.DuplicateEmail;
 
-            // Create user & persist to the DB
             var user = User.CreateUnique(
                 command.FirstName,
                 command.LastName,
-                command.Phone,
                 command.Email,
-                command.Password);
+                command.Password,
+                command.Phone);
 
-            _userRepository.Add(user);
+            await _userRepository.AddAsync(user);
 
-            // Generate JWT token
             var token = _jwtTokenGenerator.GenerateToken(user);
 
             return new AuthenticationResult(

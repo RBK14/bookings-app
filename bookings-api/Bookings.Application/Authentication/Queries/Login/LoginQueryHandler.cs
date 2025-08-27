@@ -22,7 +22,7 @@ namespace Bookings.Application.Authentication.Queries.Login
         public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
         {
             // Validate the user exists
-            if (_userRepository.GetUserByEmail(query.Email) is not User user)
+            if (await _userRepository.GetUserByEmailAsync(query.Email) is not User user)
                 return Errors.Authentication.InvalidCredentials;
 
             // Validate the password is correct
