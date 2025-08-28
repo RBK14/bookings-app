@@ -20,20 +20,24 @@ namespace Bookings.Infrastructure.Authentication
             _jwtSettings = jwtOptions.Value;
         }
 
-        public string GenerateToken(User user)
+        public string GenerateToken(User user, Guid roleId)
         {
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(_jwtSettings.Secret)),
                 SecurityAlgorithms.HmacSha256);
 
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.Value.ToString()),
                 new Claim(ClaimTypes.GivenName, user.FirstName),
                 new Claim(ClaimTypes.Surname, user.LastName),
                 new Claim(ClaimTypes.MobilePhone, user.Phone.Value),
+                new Claim(ClaimTypes.Role, user.Role.ToString()),
             };
+
+            if (roleId != default)
+                claims.Add(new Claim("RoleId", roleId.ToString()));
 
             var securityToken = new JwtSecurityToken(
                 issuer: _jwtSettings.Issuer,

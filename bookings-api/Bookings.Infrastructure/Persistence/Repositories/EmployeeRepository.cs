@@ -1,6 +1,8 @@
 ﻿using Bookings.Application.Common.Interfaces.Persistence;
 using Bookings.Domain.EmployeeAggregate;
 using Bookings.Domain.EmployeeAggregate.ValueObjects;
+using Bookings.Domain.UserAggregate.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bookings.Infrastructure.Persistence.Repositories
 {
@@ -19,9 +21,14 @@ namespace Bookings.Infrastructure.Persistence.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public Task<Employee> GetById(EmployeeId employeeId)
+        public async Task<Employee?> GetByIdAsync(EmployeeId employeeId)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Employees.FindAsync(employeeId);
+        }
+
+        public async Task<Employee?> GetByUserIdAsync(UserId userId)
+        {
+            return await _dbContext.Employees.SingleOrDefaultAsync(x => x.UserId == userId);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Bookings.Domain.ClientAggregate;
 using Bookings.Domain.ClientAggregate.ValueObjects;
+using Bookings.Domain.UserAggregate.ValueObjects;
 
 namespace Bookings.Application.Common.Interfaces.Persistence
 {
@@ -7,6 +8,8 @@ namespace Bookings.Application.Common.Interfaces.Persistence
     {
         Task AddAsync(Client client);
 
-        Task<Client> GetById(ClientId clientId);
+        Task<Client?> GetByIdAsync(ClientId clientId);
+
+        Task<Client?> GetByUserIdAsync(UserId userId);
     }
 }
