@@ -12,15 +12,20 @@ namespace Bookings.Domain.Common.ValueObjects
             Value = value;
         }
 
-        public static Duration Create(TimeSpan duration)
+        public static Duration Create(TimeSpan value)
         {
-            if (duration.TotalMinutes < 15)
+            if (value.TotalMinutes < 15)
                 throw new DomainException("Wizyta nie może być krótsza niż 15 minut.");
 
-            if (duration.TotalHours > 8)
+            if (value.TotalHours > 8)
                 throw new DomainException("Wizyta nie może trwać dłużej niż 8 godzin.");
 
-            return new Duration(duration);
+            return new Duration(value);
+        }
+
+        public static Duration Create(string value)
+        {
+            return Create(Parse(value));
         }
 
         public static TimeSpan Parse(string duration)
@@ -30,6 +35,7 @@ namespace Bookings.Domain.Common.ValueObjects
 
             if (!TimeSpan.TryParse(duration, out var parsed))
                 throw new DomainException("Nieprawidłowy format czasu.");
+
             return parsed;
         }
 

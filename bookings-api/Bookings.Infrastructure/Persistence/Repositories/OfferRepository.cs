@@ -16,13 +16,30 @@ namespace Bookings.Infrastructure.Persistence.Repositories
 
         public async Task AddAsync(Offer offer)
         {
-            await _dbContext.Offers.AddAsync(offer);
+            _dbContext.Offers.Add(offer);
             await _dbContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Offer>> GetOffersAsync()
         {
             return await _dbContext.Offers.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Offer>> SearchOffersAsync(
+            IEnumerable<IFilterable<Offer>> filters,
+            ISortable<Offer> sort)
+        {
+            var offers = await _dbContext.Offers.ToListAsync();
+            var offersQuery = offers.AsQueryable();
+
+            foreach (var filter in filters)
+            {
+                offersQuery = filter.Apply(offersQuery);
+            }
+
+            offersQuery = sort.Apply(offersQuery);
+
+            return offersQuery;
         }
 
         public async Task<Offer?> GetByIdAsync(OfferId offerId)
