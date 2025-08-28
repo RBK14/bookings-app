@@ -3,7 +3,6 @@ using Bookings.Application.Common.Interfaces.Persistence;
 using Bookings.Application.Common.Interfaces.Services;
 using Bookings.Infrastructure.Authentication;
 using Bookings.Infrastructure.Persistence;
-using Bookings.Infrastructure.Persistence.Interceptors;
 using Bookings.Infrastructure.Persistence.Repositories;
 using Bookings.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -36,7 +35,6 @@ namespace Bookings.Infrastructure
             services.AddDbContext<BookingsDbContext>(options =>
                 options.UseSqlServer("Server=DESKTOP-0BLV7GP;Database=Bookings;Trusted_Connection=True;Encrypt=True;TrustServerCertificate=True;"));
 
-            services.AddScoped<PublishDomainEventInterceptor>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IOfferRepository, OfferRepository>();
 
@@ -61,6 +59,7 @@ namespace Bookings.Infrastructure
                         ValidateIssuer = true,
                         ValidateAudience = true,
                         ValidateIssuerSigningKey = true,
+                        ValidateLifetime = true,
                         ValidIssuer = jwtSettings.Issuer,
                         ValidAudience = jwtSettings.Audience,
                         IssuerSigningKey = new SymmetricSecurityKey(

@@ -1,14 +1,14 @@
 ﻿using Bookings.Application.Common.Interfaces.Persistence;
-using Bookings.Application.Common.Interfaces.Services;
 using Bookings.Domain.Common.Errors;
 using ErrorOr;
 using MediatR;
 using Bookings.Application.Authentication.Common;
 using Bookings.Domain.UserAggregate;
+using Bookings.Application.Common.Interfaces.Authentication;
 
 namespace Bookings.Application.Authentication.Commands.Register
 {
-    public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<AuthenticationResult>>
+    public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<Unit>>
     {
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IUserRepository _userRepository;
@@ -18,25 +18,25 @@ namespace Bookings.Application.Authentication.Commands.Register
             _jwtTokenGenerator = jwtTokenGenerator;
             _userRepository = userRepository;
         }
-        public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
+        public async Task<ErrorOr<Unit>> Handle(RegisterCommand command, CancellationToken cancellationToken)
         {
             if (await _userRepository.GetUserByEmailAsync(command.Email) is not null)
                 return Errors.User.DuplicateEmail;
+
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(command.Password);
 
             var user = User.CreateUnique(
                 command.FirstName,
                 command.LastName,
                 command.Email,
-                command.Password,
+                passwordHash,
                 command.Phone);
 
             await _userRepository.AddAsync(user);
 
             var token = _jwtTokenGenerator.GenerateToken(user);
 
-            return new AuthenticationResult(
-                user,
-                token);
+            return Unit.Value;
         }
     }
 }

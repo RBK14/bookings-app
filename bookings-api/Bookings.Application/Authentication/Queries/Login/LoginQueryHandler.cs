@@ -1,14 +1,14 @@
 ﻿using Bookings.Application.Common.Interfaces.Persistence;
-using Bookings.Application.Common.Interfaces.Services;
 using Bookings.Application.Authentication.Common;
 using Bookings.Domain.Common.Errors;
 using ErrorOr;
 using MediatR;
 using Bookings.Domain.UserAggregate;
+using Bookings.Application.Common.Interfaces.Authentication;
 
 namespace Bookings.Application.Authentication.Queries.Login
 {
-    public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<AuthenticationResult>>
+    public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<string>>
     {
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IUserRepository _userRepository;
@@ -19,22 +19,15 @@ namespace Bookings.Application.Authentication.Queries.Login
             _userRepository = userRepository;
         }
 
-        public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
+        public async Task<ErrorOr<string>> Handle(LoginQuery query, CancellationToken cancellationToken)
         {
-            // Validate the user exists
             if (await _userRepository.GetUserByEmailAsync(query.Email) is not User user)
                 return Errors.Authentication.InvalidCredentials;
 
-            // Validate the password is correct
-            if (user.Password != query.Password)
+            if (!BCrypt.Net.BCrypt.Verify(query.Password, user.PasswordHash))
                 return Errors.Authentication.InvalidCredentials;
 
-            // Generate JWT token
-            var token = _jwtTokenGenerator.GenerateToken(user);
-
-            return new AuthenticationResult(
-                user,
-                token);
+            return _jwtTokenGenerator.GenerateToken(user);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Bookings.Application.Common.Interfaces.Authentication;
+﻿using Bookings.Application.Common.Interfaces.Services;
 
 namespace Bookings.Infrastructure.Services
 {

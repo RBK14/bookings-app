@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using System.Data;
 
 namespace Bookings.Application.Authentication.Queries.Login
 {

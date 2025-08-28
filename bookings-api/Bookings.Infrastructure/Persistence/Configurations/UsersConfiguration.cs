@@ -33,7 +33,7 @@ namespace Bookings.Infrastructure.Persistence.Configurations
                     .HasMaxLength(255);
             });
 
-            builder.Property(u => u.Password)
+            builder.Property(u => u.PasswordHash)
                 .HasMaxLength(255);
 
             builder.OwnsOne(u => u.Phone, pb =>

@@ -10,7 +10,7 @@ namespace Bookings.Domain.UserAggregate
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
         public Email Email { get; private set; }
-        public string Password { get; private set; }
+        public string PasswordHash { get; private set; }
         public Phone Phone { get; private set; }
         public bool IsEmailConfirmed { get; private set; }
         public string? ConfirmationCode { get; private set; }
@@ -22,7 +22,7 @@ namespace Bookings.Domain.UserAggregate
             string firstName,
             string lastName,
             Email email,
-            string password,
+            string passwordHash,
             Phone phone,
             bool isEmailConfirmed,
             string? confirmationCode,
@@ -32,7 +32,7 @@ namespace Bookings.Domain.UserAggregate
             FirstName = firstName;
             LastName = lastName;
             Email = email;
-            Password = password;
+            PasswordHash = passwordHash;
             Phone = phone;
             IsEmailConfirmed = isEmailConfirmed;
             ConfirmationCode = confirmationCode;
@@ -44,24 +44,24 @@ namespace Bookings.Domain.UserAggregate
             string firstName,
             string lastName,
             string email,
-            string password,
+            string passwordHash,
             string phone)
         {
             if (string.IsNullOrWhiteSpace(firstName))
-                throw new DomainException("Imię nie może być puste.");
+                throw new DomainException("FirstName cannot be empty.");
 
             if (string.IsNullOrWhiteSpace(lastName))
-                throw new DomainException("Nazwisko nie może być puste.");
+                throw new DomainException("LastName cannot be empty.");
 
-            if (string.IsNullOrWhiteSpace(password))
-                throw new DomainException("Hasło nie może być puste.");
+            if (string.IsNullOrWhiteSpace(passwordHash))
+                throw new DomainException("PasswordHash cannot be empty.");
 
             return new User(
                 UserId.CreateUnique(),
                 firstName,
                 lastName,
                 Email.Create(email),
-                password,
+                passwordHash,
                 Phone.Create(phone),
                 false,
                 null,
@@ -72,7 +72,7 @@ namespace Bookings.Domain.UserAggregate
         public User UpdateFirstName(string firstName)
         {
             if (string.IsNullOrWhiteSpace(firstName))
-                throw new DomainException("Imię nie może być puste.");
+                throw new DomainException("FirstName cannot be empty.");
 
             FirstName = firstName;
             UpdatedAt = DateTime.UtcNow;
@@ -82,7 +82,7 @@ namespace Bookings.Domain.UserAggregate
         public User UpdateLastName(string lastName)
         {
             if (string.IsNullOrWhiteSpace(lastName))
-                throw new DomainException("Nazwisko nie może być puste.");
+                throw new DomainException("LastName cannot be empty.");
 
             LastName = lastName;
             UpdatedAt = DateTime.UtcNow;
@@ -99,9 +99,9 @@ namespace Bookings.Domain.UserAggregate
         public User UpdatePassword(string password)
         {
             if (string.IsNullOrWhiteSpace(password))
-                throw new DomainException("Hasło nie może być puste.");
+                throw new DomainException("PasswordHash cannot be empty.");
 
-            Password = password;
+            PasswordHash = password;
             UpdatedAt = DateTime.UtcNow;
             return this;
         }

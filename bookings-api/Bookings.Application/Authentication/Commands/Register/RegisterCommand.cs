@@ -9,5 +9,5 @@ namespace Bookings.Application.Authentication.Commands.Register
         string LastName,
         string Email,
         string Password,
-        string Phone) : IRequest<ErrorOr<AuthenticationResult>>;
+        string Phone) : IRequest<ErrorOr<Unit>>;
 }

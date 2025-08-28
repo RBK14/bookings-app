@@ -28,10 +28,10 @@ namespace Bookings.Api.Controllers
         public async Task<IActionResult> Register(RegisterRequest request)
         {
             var command = _mapper.Map<RegisterCommand>(request);
-            var authResult = await _mediator.Send(command);
+            var result = await _mediator.Send(command);
 
-            return authResult.Match(
-                authResult => Ok(_mapper.Map<AuthenticationResponse>(authResult)),
+            return result.Match(
+                auth => Ok(),
                 errors => Problem(errors));
         }
 
@@ -47,7 +47,7 @@ namespace Bookings.Api.Controllers
                     title: authResult.FirstError.Description);
 
             return authResult.Match(
-               authResult => Ok(_mapper.Map<AuthenticationResponse>(authResult)),
+               token => Ok(token),
                errors => Problem(errors));
         }
     }
