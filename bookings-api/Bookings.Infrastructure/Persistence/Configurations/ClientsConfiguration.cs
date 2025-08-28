@@ -1,5 +1,6 @@
 ﻿using Bookings.Domain.ClientAggregate;
 using Bookings.Domain.ClientAggregate.ValueObjects;
+using Bookings.Domain.UserAggregate;
 using Bookings.Domain.UserAggregate.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -33,19 +34,6 @@ namespace Bookings.Infrastructure.Persistence.Configurations
                     id => id.Value,
                     value => UserId.Create(value)
                 );
-
-            builder.Property(c => c.FirstName)
-                .HasMaxLength(100);
-
-            builder.Property(c => c.LastName)
-                .HasMaxLength(100);
-
-            builder.OwnsOne(c => c.Phone, pb =>
-            {
-                pb.Property(p => p.Value)
-                    .HasColumnName("Phone")
-                    .HasMaxLength(16);
-            });
 
             builder.Property(c => c.CreatedAt);
             builder.Property(c => c.UpdatedAt);

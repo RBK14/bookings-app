@@ -4,6 +4,7 @@ using Bookings.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bookings.Infrastructure.Migrations
 {
     [DbContext(typeof(BookingsDbContext))]
-    partial class BookingsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250828123259_RemoveClientPersonalData")]
+    partial class RemoveClientPersonalData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,6 +89,9 @@ namespace Bookings.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Clients", (string)null);
                 });
@@ -256,6 +262,12 @@ namespace Bookings.Infrastructure.Migrations
 
             modelBuilder.Entity("Bookings.Domain.ClientAggregate.Client", b =>
                 {
+                    b.HasOne("Bookings.Domain.UserAggregate.User", null)
+                        .WithOne()
+                        .HasForeignKey("Bookings.Domain.ClientAggregate.Client", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.OwnsMany("Bookings.Domain.AppointmentAggregate.ValueObjects.AppointmentId", "AppointmentIds", b1 =>
                         {
                             b1.Property<int>("Id")
