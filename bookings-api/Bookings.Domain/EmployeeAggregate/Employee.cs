@@ -1,7 +1,5 @@
 ﻿using Bookings.Domain.AppointmentAggregate.ValueObjects;
-using Bookings.Domain.Common.Exceptions;
 using Bookings.Domain.Common.Models;
-using Bookings.Domain.Common.ValueObjects;
 using Bookings.Domain.EmployeeAggregate.ValueObjects;
 using Bookings.Domain.OfferAggregate.ValueObjects;
 using Bookings.Domain.UserAggregate.ValueObjects;
@@ -14,9 +12,6 @@ namespace Bookings.Domain.EmployeeAggregate
         private readonly List<AppointmentId> _appointmentIds = new();
 
         public UserId UserId { get; init; }
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-        public Phone Phone { get; private set; }
         public IReadOnlyList<OfferId> OfferIds => _offerIds.AsReadOnly();
         public IReadOnlyList<AppointmentId> AppointmentIds => _appointmentIds.AsReadOnly();
         public DateTime CreatedAt { get; init; }
@@ -25,67 +20,21 @@ namespace Bookings.Domain.EmployeeAggregate
         private Employee(
             EmployeeId employeeId,
             UserId userId,
-            string firstName,
-            string lastName,
-            Phone phone,
             DateTime createdAt,
             DateTime updatedAt) : base(employeeId)
         {
             UserId = userId;
-            FirstName = firstName;
-            LastName = lastName;
-            Phone = phone;
             CreatedAt = createdAt;
             UpdatedAt = updatedAt;
         }
 
-        public static Employee CreateUnique(
-            UserId userId,
-            string firstName,
-            string lastName,
-            string phone)
+        public static Employee CreateUnique(UserId userId)
         {
-            if (string.IsNullOrWhiteSpace(firstName))
-                throw new DomainException("Imię nie może być puste.");
-
-            if (string.IsNullOrWhiteSpace(lastName))
-                throw new DomainException("Imię nie może być puste.");
-
             return new Employee(
                 EmployeeId.CrateUnique(),
                 userId,
-                firstName,
-                lastName,
-                Phone.Create(phone),
                 DateTime.UtcNow,
                 DateTime.UtcNow);
-        }
-
-        public Employee UpdateFirstName(string firstName)
-        {
-            if (string.IsNullOrWhiteSpace(firstName))
-                throw new DomainException("Imię nie może być puste.");
-
-            FirstName = firstName;
-            UpdatedAt = DateTime.UtcNow;
-            return this;
-        }
-
-        public Employee UpdateLastName(string lastName)
-        {
-            if (string.IsNullOrWhiteSpace(lastName))
-                throw new DomainException("Nazwisko nie może być puste.");
-
-            LastName = lastName;
-            UpdatedAt = DateTime.UtcNow;
-            return this;
-        }
-
-        public Employee UpdatePhone(string phone)
-        {
-            Phone = Phone.Create(phone);
-            UpdatedAt = DateTime.UtcNow;
-            return this;
         }
 
 #pragma warning disable CS8618

@@ -1,5 +1,4 @@
-﻿using Bookings.Application.Authentication.Common;
-using ErrorOr;
+﻿using ErrorOr;
 using MediatR;
 
 namespace Bookings.Application.Authentication.Commands.Register

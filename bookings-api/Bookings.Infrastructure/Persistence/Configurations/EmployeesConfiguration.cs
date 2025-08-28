@@ -35,19 +35,6 @@ namespace Bookings.Infrastructure.Persistence.Configurations
                     value => UserId.Create(value)
                 );
 
-            builder.Property(e => e.FirstName)
-                .HasMaxLength(100);
-
-            builder.Property(e => e.LastName)
-                .HasMaxLength(100);
-
-            builder.OwnsOne(e => e.Phone, pb =>
-            {
-                pb.Property(p => p.Value)
-                    .HasColumnName("Phone")
-                    .HasMaxLength(16);
-            });
-
             builder.Property(e => e.CreatedAt);
             builder.Property(e => e.UpdatedAt);
         }

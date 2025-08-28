@@ -22,7 +22,7 @@ namespace Bookings.Application.Offers.Filters
                 "PriceDesc" => query.OrderByDescending(o => o.Price.Amount),
                 "DurationAsc" => query.OrderBy(o => o.Duration.Value),
                 "DurationDesc" => query.OrderByDescending(o => o.Duration.Value),
-                _ => query
+                _ => query.OrderBy(o => o.Name),
             };
         }
     }

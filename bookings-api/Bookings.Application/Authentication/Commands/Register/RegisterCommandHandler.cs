@@ -2,7 +2,6 @@
 using Bookings.Domain.Common.Errors;
 using ErrorOr;
 using MediatR;
-using Bookings.Application.Authentication.Common;
 using Bookings.Domain.UserAggregate;
 using Bookings.Application.Common.Interfaces.Authentication;
 
