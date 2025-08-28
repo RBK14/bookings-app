@@ -33,8 +33,6 @@ namespace Bookings.Application.Authentication.Commands.Register
 
             await _userRepository.AddAsync(user);
 
-            var token = _jwtTokenGenerator.GenerateToken(user);
-
             return Unit.Value;
         }
     }
