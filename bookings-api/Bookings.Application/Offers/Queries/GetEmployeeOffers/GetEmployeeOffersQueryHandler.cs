@@ -7,27 +7,25 @@ using Bookings.Domain.OfferAggregate;
 using Bookings.Infrastructure.Persistence.Offers;
 using MediatR;
 
-namespace Bookings.Application.Offers.Queries.SearchOffers
+namespace Bookings.Application.Offers.Queries.GetEmployeeOffers
 {
-    public class SearchOffersQueryHandler : IRequestHandler<SearchOffersQuery, IEnumerable<Offer>>
+    public class GetEmployeeOffersQueryHandler : IRequestHandler<GetEmployeeOffersQuery, IEnumerable<Offer>>
     {
         private readonly IOfferRepository _offerRepository;
 
-        public SearchOffersQueryHandler(IOfferRepository offerRepository)
+        public GetEmployeeOffersQueryHandler(IOfferRepository offerRepository)
         {
             _offerRepository = offerRepository;
         }
 
-        public async Task<IEnumerable<Offer>> Handle(SearchOffersQuery query, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Offer>> Handle(GetEmployeeOffersQuery query, CancellationToken cancellationToken)
         {
-            var employeeId = !string.IsNullOrWhiteSpace(query.EmployeeId) 
-                ? EmployeeId.Create(query.EmployeeId)
-                : null;
+            var employeeId = EmployeeId.Create(query.EmployeeId);
 
             var currency = CurrencyExtensions.IsCorrectCurrencyCode(query.Currency)
                 ? CurrencyExtensions.FromCode(query.Currency)
-                : Currency.PLN; // Domyślnie ustawiane jest PLN
-            
+                : Currency.PLN; // If null => PLN by default
+
             var minPrice = query.MinPrice is decimal
                 ? Price.Create(query.MinPrice.Value, currency)
                 : null;
@@ -47,14 +45,14 @@ namespace Bookings.Application.Offers.Queries.SearchOffers
             var filter = new List<IFilterable<Offer>>
             {
                 new NameFilter(query.Name),
-                new EmployeeIdFilter(employeeId!),
+                new EmployeeIdFilter(employeeId),
                 new PriceRangeFilter(minPrice, maxPrice),
                 new DurationRangeFilter(minDuration, maxDuration)
             };
 
             var sort = new OfferSort(query.SortBy);
 
-            return await _offerRepository.SearchOffersAsync(filter, sort);
+            return await _offerRepository.GetOffersAsync(filter, sort);
         }
     }
 }

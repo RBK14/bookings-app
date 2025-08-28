@@ -25,19 +25,23 @@ namespace Bookings.Infrastructure.Persistence.Repositories
             return await _dbContext.Offers.ToListAsync();
         }
 
-        public async Task<IEnumerable<Offer>> SearchOffersAsync(
-            IEnumerable<IFilterable<Offer>> filters,
-            ISortable<Offer> sort)
+        public async Task<IEnumerable<Offer>> GetOffersAsync(
+            IEnumerable<IFilterable<Offer>>? filters,
+            ISortable<Offer>? sort)
         {
             var offers = await _dbContext.Offers.ToListAsync();
             var offersQuery = offers.AsQueryable();
 
-            foreach (var filter in filters)
+            if (filters is not null)
             {
-                offersQuery = filter.Apply(offersQuery);
+                foreach (var filter in filters)
+                {
+                    offersQuery = filter.Apply(offersQuery);
+                }
             }
-
-            offersQuery = sort.Apply(offersQuery);
+            
+            if (sort is not null)
+                offersQuery = sort.Apply(offersQuery);
 
             return offersQuery;
         }

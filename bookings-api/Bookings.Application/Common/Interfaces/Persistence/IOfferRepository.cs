@@ -7,9 +7,7 @@ namespace Bookings.Application.Common.Interfaces.Persistence
     {
         Task AddAsync(Offer offer);
 
-        Task<IEnumerable<Offer>> GetOffersAsync();
-
-        Task<IEnumerable<Offer>> SearchOffersAsync(IEnumerable<IFilterable<Offer>> filters, ISortable<Offer> sort);
+        Task<IEnumerable<Offer>> GetOffersAsync(IEnumerable<IFilterable<Offer>>? filters, ISortable<Offer>? sort);
 
         Task<Offer?> GetByIdAsync(OfferId offerId);
 

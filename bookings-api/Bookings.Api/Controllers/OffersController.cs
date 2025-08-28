@@ -1,6 +1,6 @@
 ﻿using Bookings.Application.Offers.Commands.CreateOffer;
+using Bookings.Application.Offers.Queries.GetEmployeeOffers;
 using Bookings.Application.Offers.Queries.GetOfferById;
-using Bookings.Application.Offers.Queries.GetOffers;
 using Bookings.Application.Offers.Queries.SearchOffers;
 using Bookings.Contracts.Offers;
 using MapsterMapper;
@@ -25,21 +25,7 @@ namespace Bookings.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetOffers()
-        {
-            var query = new GetOffersQuery();
-
-            var result = await _mediator.Send(query);
-
-            var response = result
-                .Select(o => _mapper.Map<OfferResponse>(o))
-                .ToList();
-
-            return Ok(response);
-        }
-
-        [HttpGet("search")]
-        public async Task<IActionResult> SearchOffers(
+        public async Task<IActionResult> GetOffers(
             [FromQuery] string? name,
             [FromQuery] string? employeeId,
             [FromQuery] decimal? minPrice,
@@ -49,7 +35,7 @@ namespace Bookings.Api.Controllers
             [FromQuery] string? maxDuration,
             [FromQuery] string? sortBy)
         {
-            var query = new SearchOffersQuery(
+            var query = new GetOffersQuery(
                 Name: name,
                 EmployeeId: employeeId,
                 MinPrice: minPrice,
@@ -80,6 +66,43 @@ namespace Bookings.Api.Controllers
                 offer => Ok(_mapper.Map<OfferResponse>(offer)),
                 errors => Problem(errors)
             );
+        }
+
+        [HttpGet("myoffers")]
+        public async Task<IActionResult> GetEmployeeOffers(
+            [FromQuery] string? name,
+            [FromQuery] decimal? minPrice,
+            [FromQuery] decimal? maxPrice,
+            [FromQuery] int? currency,
+            [FromQuery] string? minDuration,
+            [FromQuery] string? maxDuration,
+            [FromQuery] string? sortBy)
+        {
+            // TODO: Przerobić na EmployeeId
+            var employeeId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            // TODO: Walidacja Id
+            if (string.IsNullOrEmpty(employeeId))
+                return Unauthorized();
+
+            var query = new GetEmployeeOffersQuery(
+                EmployeeId: employeeId,
+                Name: name,
+                MinPrice: minPrice,
+                MaxPrice: maxPrice,
+                Currency: currency,
+                MinDuration: minDuration,
+                MaxDuration: maxDuration,
+                SortBy: sortBy
+            );
+
+            var result = await _mediator.Send(query);
+
+            var response = result
+                .Select(o => _mapper.Map<OfferResponse>(o))
+                .ToList();
+
+            return Ok(response);
         }
 
         [HttpPost("create")]
