@@ -1,6 +1,7 @@
 ﻿ using Bookings.Domain.Common.Exceptions;
 using Bookings.Domain.Common.Models;
 using Bookings.Domain.Common.ValueObjects;
+using Bookings.Domain.UserAggregate.Enums;
 using Bookings.Domain.UserAggregate.Events;
 using Bookings.Domain.UserAggregate.ValueObjects;
 
@@ -13,6 +14,7 @@ namespace Bookings.Domain.UserAggregate
         public Email Email { get; private set; }
         public string PasswordHash { get; private set; }
         public Phone Phone { get; private set; }
+        public UserRole Role { get; init; }
         public bool IsEmailConfirmed { get; private set; }
         public string? ConfirmationCode { get; private set; }
         public DateTime CreatedAt { get; init; }
@@ -25,6 +27,7 @@ namespace Bookings.Domain.UserAggregate
             Email email,
             string passwordHash,
             Phone phone,
+            UserRole role,
             bool isEmailConfirmed,
             string? confirmationCode,
             DateTime createdAt,
@@ -35,6 +38,7 @@ namespace Bookings.Domain.UserAggregate
             Email = email;
             PasswordHash = passwordHash;
             Phone = phone;
+            Role = role;
             IsEmailConfirmed = isEmailConfirmed;
             ConfirmationCode = confirmationCode;
             CreatedAt = createdAt;
@@ -46,7 +50,8 @@ namespace Bookings.Domain.UserAggregate
             string lastName,
             string email,
             string passwordHash,
-            string phone)
+            string phone,
+            UserRole role = UserRole.Client)
         {
             if (string.IsNullOrWhiteSpace(firstName))
                 throw new DomainException("FirstName cannot be empty.");
@@ -64,12 +69,14 @@ namespace Bookings.Domain.UserAggregate
                 Email.Create(email),
                 passwordHash,
                 Phone.Create(phone),
+                role,
                 false,
                 null,
                 DateTime.UtcNow,
                 DateTime.UtcNow);
 
-            user.AddDomainEvent(new UserCreatedEvent(user));
+            if (role == UserRole.Client || role == UserRole.Employee)
+                user.AddDomainEvent(new UserCreatedEvent(user));
 
             return user;
         }

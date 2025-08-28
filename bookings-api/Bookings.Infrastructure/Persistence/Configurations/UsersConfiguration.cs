@@ -1,4 +1,6 @@
-﻿using Bookings.Domain.UserAggregate;
+﻿using Bookings.Domain.Common.Enums;
+using Bookings.Domain.UserAggregate;
+using Bookings.Domain.UserAggregate.Enums;
 using Bookings.Domain.UserAggregate.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -42,6 +44,12 @@ namespace Bookings.Infrastructure.Persistence.Configurations
                     .HasColumnName("Phone")
                     .HasMaxLength(16);
             });
+
+            builder.Property(u => u.Role)
+                .HasConversion(
+                    currency => currency.ToString(),
+                    value => Enum.Parse<UserRole>(value))
+                .IsUnicode(false);
 
             builder.Property(u => u.IsEmailConfirmed);
 
