@@ -1,18 +1,22 @@
 ﻿using Bookings.Domain.AppointmentAggregate;
 using Bookings.Domain.ClientAggregate;
+using Bookings.Domain.Common.Models;
 using Bookings.Domain.EmployeeAggregate;
 using Bookings.Domain.OfferAggregate;
 using Bookings.Domain.UserAggregate;
+using Bookings.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bookings.Infrastructure.Persistence
 {
     public class BookingsDbContext : DbContext
     {
-
+        private readonly PublishDomainEventInterceptor _publishDomainEventInterceptor;
         public BookingsDbContext(
-            DbContextOptions<BookingsDbContext> options) : base(options)
+            DbContextOptions<BookingsDbContext> options,
+            PublishDomainEventInterceptor publishDomainEventInterceptor) : base(options)
         {
+            _publishDomainEventInterceptor = publishDomainEventInterceptor;
         }
 
         public DbSet<Offer> Offers { get; set; } = null!;
@@ -24,6 +28,7 @@ namespace Bookings.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
+                .Ignore<List<IDomainEvent>>()
                 .ApplyConfigurationsFromAssembly(typeof(BookingsDbContext).Assembly);
 
             foreach (var property in modelBuilder.Model.GetEntityTypes()
@@ -38,6 +43,8 @@ namespace Bookings.Infrastructure.Persistence
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.AddInterceptors(_publishDomainEventInterceptor);
+
             base.OnConfiguring(optionsBuilder);
         }
     }

@@ -1,6 +1,7 @@
-﻿using Bookings.Domain.Common.Exceptions;
+﻿ using Bookings.Domain.Common.Exceptions;
 using Bookings.Domain.Common.Models;
 using Bookings.Domain.Common.ValueObjects;
+using Bookings.Domain.UserAggregate.Events;
 using Bookings.Domain.UserAggregate.ValueObjects;
 
 namespace Bookings.Domain.UserAggregate
@@ -56,7 +57,7 @@ namespace Bookings.Domain.UserAggregate
             if (string.IsNullOrWhiteSpace(passwordHash))
                 throw new DomainException("PasswordHash cannot be empty.");
 
-            return new User(
+            var user = new User(
                 UserId.CreateUnique(),
                 firstName,
                 lastName,
@@ -67,6 +68,10 @@ namespace Bookings.Domain.UserAggregate
                 null,
                 DateTime.UtcNow,
                 DateTime.UtcNow);
+
+            user.AddDomainEvent(new UserCreatedEvent(user));
+
+            return user;
         }
 
         public User UpdateFirstName(string firstName)

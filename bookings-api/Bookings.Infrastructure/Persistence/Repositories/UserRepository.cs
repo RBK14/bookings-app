@@ -1,7 +1,6 @@
 ﻿using Bookings.Application.Common.Interfaces.Persistence;
 using Bookings.Domain.UserAggregate;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace Bookings.Infrastructure.Persistence.Repositories
 {
