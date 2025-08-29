@@ -1,4 +1,5 @@
 ﻿using Bookings.Application.Offers.Commands.CreateOffer;
+using Bookings.Application.Offers.Commands.DeleteOffer;
 using Bookings.Application.Offers.Commands.UpdateOffer;
 using Bookings.Application.Offers.Queries.GetEmployeeOffers;
 using Bookings.Application.Offers.Queries.GetOfferById;
@@ -69,7 +70,7 @@ namespace Bookings.Api.Controllers
             );
         }
 
-        [HttpGet("mine")]
+        [HttpGet("myoffers")]
         [Authorize(Roles = "Employee")]
         public async Task<IActionResult> GetEmployeeOffers(
             [FromQuery] string? name,
@@ -80,12 +81,10 @@ namespace Bookings.Api.Controllers
             [FromQuery] string? maxDuration,
             [FromQuery] string? sortBy)
         {
-            // TODO: Przerobić na EmployeeId
             var employeeId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            // TODO: Walidacja Id
             if (string.IsNullOrEmpty(employeeId))
-                return Unauthorized();
+                return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "Identyfikator pracownika jest nieprawidłowy.");
 
             var query = new GetEmployeeOffersQuery(
                 EmployeeId: employeeId,
@@ -114,7 +113,7 @@ namespace Bookings.Api.Controllers
             var employeeId = User.FindFirst("RoleId")?.Value;
 
             if (string.IsNullOrEmpty(employeeId))
-                return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "Identyfikator pracownika jest nieprawidłowy"); 
+                return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "Identyfikator pracownika jest nieprawidłowy."); 
 
             var command = _mapper.Map<CreateOfferCommand>((request, employeeId));
 
@@ -133,7 +132,7 @@ namespace Bookings.Api.Controllers
             var employeeId = User.FindFirst("RoleId")?.Value;
 
             if (string.IsNullOrEmpty(employeeId))   // If empty => UserRole: Admin
-                employeeId = "00000000-0000-0000-0000-000000000000"; // Setting RoleId value for admin
+                employeeId = Guid.Empty.ToString(); // Setting employeeId value for admin
 
             var command = _mapper.Map<UpdateOfferCommand>((request, offerId, employeeId));
 
@@ -143,6 +142,24 @@ namespace Bookings.Api.Controllers
                 offer => Ok(_mapper.Map<OfferResponse>(offer)),
                 errors => Problem(errors)
             );
+        }
+
+        [HttpDelete("{offerId}/delete")]
+        [Authorize(Roles = "Admin, Employee")]
+        public async Task<IActionResult> DeleteOffer(string offerId)
+        {
+            var employeeId = User.FindFirst("RoleId")?.Value;
+
+            if (string.IsNullOrEmpty(employeeId))   // If empty => UserRole: Admin
+                employeeId = Guid.Empty.ToString(); // Setting employeeId value for admin
+
+            var command = new DeleteOfferCommand(offerId, employeeId);
+
+            var result = await _mediator.Send(command);
+
+            return result.Match(
+                r => Ok(),
+                errors => Problem(errors));
         }
     }
 }

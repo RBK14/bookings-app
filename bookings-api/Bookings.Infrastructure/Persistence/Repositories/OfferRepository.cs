@@ -56,5 +56,11 @@ namespace Bookings.Infrastructure.Persistence.Repositories
             _dbContext.Offers.Update(offer);
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task DeleteOfferAsync(Offer offer)
+        {
+            _dbContext.Offers.Remove(offer);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }
