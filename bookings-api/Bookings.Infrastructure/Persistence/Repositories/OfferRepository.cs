@@ -50,5 +50,11 @@ namespace Bookings.Infrastructure.Persistence.Repositories
         {
             return await _dbContext.Offers.FindAsync(offerId);
         }
+
+        public async Task UpdateOfferAsync(Offer offer)
+        {
+            _dbContext.Offers.Update(offer);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

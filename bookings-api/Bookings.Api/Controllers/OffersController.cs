@@ -1,4 +1,5 @@
 ﻿using Bookings.Application.Offers.Commands.CreateOffer;
+using Bookings.Application.Offers.Commands.UpdateOffer;
 using Bookings.Application.Offers.Queries.GetEmployeeOffers;
 using Bookings.Application.Offers.Queries.GetOfferById;
 using Bookings.Application.Offers.Queries.SearchOffers;
@@ -55,10 +56,10 @@ namespace Bookings.Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetOfferById(string id)
+        [HttpGet("{offerId}")]
+        public async Task<IActionResult> GetOfferById(string offerId)
         {
-            var query = new GetOfferByIdQuery(id);
+            var query = new GetOfferByIdQuery(offerId);
 
             var result = await _mediator.Send(query);
 
@@ -68,7 +69,8 @@ namespace Bookings.Api.Controllers
             );
         }
 
-        [HttpGet("myoffers")]
+        [HttpGet("mine")]
+        [Authorize(Roles = "Employee")]
         public async Task<IActionResult> GetEmployeeOffers(
             [FromQuery] string? name,
             [FromQuery] decimal? minPrice,
@@ -106,16 +108,34 @@ namespace Bookings.Api.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = "Employee")]
         public async Task<IActionResult> CreateOffer(CreateOfferRequest request)
         {
-            // TODO: Przerobić na EmployeeId
-            var employeeId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var employeeId = User.FindFirst("RoleId")?.Value;
 
-            // TODO: Walidacja Id
             if (string.IsNullOrEmpty(employeeId))
-                return Unauthorized();
+                return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "Identyfikator pracownika jest nieprawidłowy"); 
 
             var command = _mapper.Map<CreateOfferCommand>((request, employeeId));
+
+            var result = await _mediator.Send(command);
+
+            return result.Match(
+                offer => Ok(_mapper.Map<OfferResponse>(offer)),
+                errors => Problem(errors)
+            );
+        }
+
+        [HttpPost("{offerId}/update")]
+        [Authorize(Roles = "Admin, Employee")]
+        public async Task<IActionResult> UpdateOffer(UpdateOfferRequest request, string offerId)
+        {
+            var employeeId = User.FindFirst("RoleId")?.Value;
+
+            if (string.IsNullOrEmpty(employeeId))   // If empty => UserRole: Admin
+                employeeId = "00000000-0000-0000-0000-000000000000"; // Setting RoleId value for admin
+
+            var command = _mapper.Map<UpdateOfferCommand>((request, offerId, employeeId));
 
             var result = await _mediator.Send(command);
 

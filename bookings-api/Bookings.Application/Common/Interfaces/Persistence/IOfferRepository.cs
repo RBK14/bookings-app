@@ -11,5 +11,7 @@ namespace Bookings.Application.Common.Interfaces.Persistence
 
         Task<Offer?> GetByIdAsync(OfferId offerId);
 
+        Task UpdateOfferAsync(Offer offer);
+
     }
 }

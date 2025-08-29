@@ -1,13 +1,18 @@
 ﻿using Bookings.Domain.Common.Enums;
 using FluentValidation;
-using System.Text.RegularExpressions;
 
-namespace Bookings.Application.Offers.Commands.CreateOffer
+namespace Bookings.Application.Offers.Commands.UpdateOffer
 {
-    public class UpdateOfferCommandValidator : AbstractValidator<CreateOfferCommand>
+    public class UpdateOfferCommandValidator : AbstractValidator<UpdateOfferCommand>
     {
         public UpdateOfferCommandValidator()
         {
+            RuleFor(x => x.OfferId)
+                .NotEmpty().WithMessage("Identyfikator oferty jest wymagany.");
+
+            RuleFor(x => x.EmployeeId)
+                .NotEmpty().WithMessage("Identyfikator pracownika jest wymagany.");
+
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Nazwa jest wymagana.")
                 .MaximumLength(100).WithMessage("Nazwa nie może być dłuższa niż 100 znaków.");

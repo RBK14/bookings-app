@@ -9,6 +9,10 @@ namespace Bookings.Domain.Common.Errors
             public static Error DuplicateEmail => Error.Conflict(
                 code: "User.DuplicateEmail",
                 description: "Użytownik z takim adresem email już istnieje.");
+
+            public static Error NoPermissions => Error.Forbidden(
+                code: "User.NoPermissions",
+                description: "Nie można wykonać tej operacji z powodu braku uprawnień.");
         }
     }
 }

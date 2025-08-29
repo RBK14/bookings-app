@@ -1,6 +1,5 @@
 ﻿using Bookings.Domain.AppointmentAggregate.ValueObjects;
 using Bookings.Domain.Common.Enums;
-using Bookings.Domain.Common.Exceptions;
 using Bookings.Domain.Common.Models;
 using Bookings.Domain.Common.ValueObjects;
 using Bookings.Domain.EmployeeAggregate.ValueObjects;
@@ -48,12 +47,6 @@ namespace Bookings.Domain.OfferAggregate
             Currency currency,
             TimeSpan duration)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new DomainException("Nazwa wizyty nie może być pusta.");
-
-            if (string.IsNullOrWhiteSpace(description))
-                throw new DomainException("Opis wizyty nie może być pusty.");
-
             var offer = new Offer(
                 OfferId.CreateUnique(),
                 name,
@@ -69,9 +62,6 @@ namespace Bookings.Domain.OfferAggregate
 
         public Offer UpdateName(string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new DomainException("Nazwa wizyty nie może być pusta.");
-
             Name = name;
             UpdatedAt = DateTime.UtcNow;
             return this;
@@ -79,10 +69,14 @@ namespace Bookings.Domain.OfferAggregate
 
         public Offer UpdateDescription(string description)
         {
-            if (string.IsNullOrWhiteSpace(description))
-                throw new DomainException("Opis wizyty nie może być pusty.");
-
             Description = description;
+            UpdatedAt = DateTime.UtcNow;
+            return this;
+        }
+
+        public Offer UpdatePrice(decimal amount, Currency currency)
+        {
+            Price = Price.Create(amount, currency);
             UpdatedAt = DateTime.UtcNow;
             return this;
         }
