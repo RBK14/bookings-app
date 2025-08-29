@@ -41,7 +41,7 @@ namespace Bookings.Application.Offers.Commands.UpdateOffer
             offer.UpdatePrice(command.Amount, currency);
             offer.UpdateDuration(duration);
 
-            await _offerRepository.UpdateOfferAsync(offer);
+            await _offerRepository.UpdateAsync(offer);
 
             return offer;
         }

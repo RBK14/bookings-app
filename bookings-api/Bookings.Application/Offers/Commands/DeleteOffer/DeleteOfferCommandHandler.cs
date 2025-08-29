@@ -31,7 +31,7 @@ namespace Bookings.Application.Offers.Commands.DeleteOffer
             if (!isAdmin && offer.EmployeeId != employeeId)
                 return Errors.User.NoPermissions;
 
-            await _offerRepository.DeleteOfferAsync(offer);
+            await _offerRepository.DeleteAsync(offer);
 
             return Unit.Value;
         }

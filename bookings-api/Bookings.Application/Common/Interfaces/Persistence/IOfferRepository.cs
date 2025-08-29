@@ -6,9 +6,9 @@ namespace Bookings.Application.Common.Interfaces.Persistence
     public interface IOfferRepository
     {
         Task AddAsync(Offer offer);
-        Task<IEnumerable<Offer>> GetOffersAsync(IEnumerable<IFilterable<Offer>>? filters, ISortable<Offer>? sort);
         Task<Offer?> GetByIdAsync(OfferId offerId);
-        Task UpdateOfferAsync(Offer offer);
-        Task DeleteOfferAsync(Offer offer);
+        Task<IEnumerable<Offer>> SearchAsync(IEnumerable<IFilterable<Offer>>? filters, ISortable<Offer>? sort);
+        Task UpdateAsync(Offer offer);
+        Task DeleteAsync(Offer offer);
     }
 }

@@ -27,13 +27,24 @@ namespace Bookings.Domain.ClientAggregate
             UpdatedAt = updatedAt;
         }
 
-        public static Client CreateUnique(UserId userId)
+        public static Client Create(UserId userId)
         {
             return new Client(
                 ClientId.CrateUnique(),
                 userId,
                 DateTime.UtcNow,
                 DateTime.UtcNow);
+        }
+
+        public Client AddAppointmentId(AppointmentId appointmentId)
+        {
+            if (_appointmentIds.Contains(appointmentId))
+                throw new DomainException("The appointment is already associated with this client.");
+
+            _appointmentIds.Add(appointmentId);
+            UpdatedAt = DateTime.UtcNow;
+
+            return this;
         }
 
 #pragma warning disable CS8618

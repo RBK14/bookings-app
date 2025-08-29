@@ -36,7 +36,7 @@ namespace Bookings.Infrastructure.Authentication
                 new Claim(ClaimTypes.Role, user.Role.ToString()),
             };
 
-            if (roleId != default)
+            if (roleId != Guid.Empty)
                 claims.Add(new Claim("RoleId", roleId.ToString()));
 
             var securityToken = new JwtSecurityToken(

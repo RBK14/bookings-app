@@ -1,5 +1,6 @@
 ﻿using Bookings.Domain.AppointmentAggregate.ValueObjects;
 using Bookings.Domain.Common.Enums;
+using Bookings.Domain.Common.Exceptions;
 using Bookings.Domain.Common.Models;
 using Bookings.Domain.Common.ValueObjects;
 using Bookings.Domain.EmployeeAggregate.ValueObjects;
@@ -85,6 +86,17 @@ namespace Bookings.Domain.OfferAggregate
         {
             Duration = Duration.Create(duration);
             UpdatedAt = DateTime.UtcNow;
+            return this;
+        }
+
+        public Offer AddAppointmentId(AppointmentId appointmentId)
+        {
+            if (_appointmentIds.Contains(appointmentId))
+                throw new DomainException("The appointment is already associated with this offer.");
+
+            _appointmentIds.Add(appointmentId);
+            UpdatedAt = DateTime.UtcNow;
+
             return this;
         }
 

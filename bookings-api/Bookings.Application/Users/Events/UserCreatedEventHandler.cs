@@ -25,12 +25,12 @@ namespace Bookings.Application.Users.Events
 
             if (userRole == UserRole.Client)
             {
-                var client = Client.CreateUnique(userId);
+                var client = Client.Create(userId);
                 await _clientRepository.AddAsync(client);
             }
             else if (userRole == UserRole.Employee)
             {
-                var employee = Employee.CreateUnique(userId);
+                var employee = Employee.Create(userId);
                 await _employeeRepository.AddAsync(employee);
             }
         }

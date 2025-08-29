@@ -1,6 +1,7 @@
-using Bookings.Api;
+﻿using Bookings.Api;
 using Bookings.Application;
 using Bookings.Infrastructure;
+using Bookings.Api.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -10,7 +11,12 @@ var builder = WebApplication.CreateBuilder(args);
         .AddInfrastructure(builder.Configuration);
 }
 
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
+
 {
     if (app.Environment.IsDevelopment())
     {

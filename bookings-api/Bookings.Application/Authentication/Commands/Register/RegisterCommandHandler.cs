@@ -4,6 +4,7 @@ using ErrorOr;
 using MediatR;
 using Bookings.Domain.UserAggregate;
 using Bookings.Application.Common.Interfaces.Authentication;
+using Bookings.Domain.UserAggregate.ValueObjects;
 
 namespace Bookings.Application.Authentication.Commands.Register
 {
@@ -19,7 +20,8 @@ namespace Bookings.Application.Authentication.Commands.Register
         }
         public async Task<ErrorOr<Unit>> Handle(RegisterCommand command, CancellationToken cancellationToken)
         {
-            if (await _userRepository.GetUserByEmailAsync(command.Email) is not null)
+            var email = Email.Create(command.Email);
+            if (await _userRepository.GetByEmailAsync(email) is not null)
                 return Errors.User.DuplicateEmail;
 
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(command.Password);

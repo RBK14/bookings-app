@@ -1,9 +1,7 @@
 ﻿using Bookings.Application.Authentication.Commands.Register;
-using Bookings.Application.Authentication.Common;
 using Bookings.Application.Authentication.Queries.Login;
 using Bookings.Contracts.Authentication;
 using Bookings.Domain.Common.Errors;
-using ErrorOr;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -31,7 +29,7 @@ namespace Bookings.Api.Controllers
             var result = await _mediator.Send(command);
 
             return result.Match(
-                auth => Ok(),
+                r => Ok(),
                 errors => Problem(errors));
         }
 
@@ -39,14 +37,14 @@ namespace Bookings.Api.Controllers
         public async Task<IActionResult> Login(LoginRequest request)
         {
             var query = _mapper.Map<LoginQuery>(request);
-            var authResult = await _mediator.Send(query);
+            var result = await _mediator.Send(query);
 
-            if (authResult.IsError && authResult.FirstError == Errors.Authentication.InvalidCredentials)
+            if (result.IsError && result.FirstError == Errors.Authentication.InvalidCredentials)
                 return Problem(
                     statusCode: StatusCodes.Status401Unauthorized,
-                    title: authResult.FirstError.Description);
+                    title: result.FirstError.Description);
 
-            return authResult.Match(
+            return result.Match(
                token => Ok(token),
                errors => Problem(errors));
         }

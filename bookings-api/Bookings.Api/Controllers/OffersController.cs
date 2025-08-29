@@ -15,16 +15,10 @@ namespace Bookings.Api.Controllers
 {
     [Route("offers")]
     [Authorize]
-    public class OffersController : ApiController
+    public class OffersController(ISender mediator, IMapper mapper) : ApiController
     {
-        private readonly ISender _mediator;
-        private readonly IMapper _mapper;
-
-        public OffersController(ISender mediator, IMapper mapper)
-        {
-            _mediator = mediator;
-            _mapper = mapper;
-        }
+        private readonly ISender _mediator = mediator;
+        private readonly IMapper _mapper = mapper;
 
         [HttpGet]
         public async Task<IActionResult> GetOffers(
@@ -57,10 +51,29 @@ namespace Bookings.Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{offerId}")]
-        public async Task<IActionResult> GetOfferById(string offerId)
+        [HttpPost]
+        [Authorize(Roles = "Employee")]
+        public async Task<IActionResult> CreateOffer(CreateOfferRequest request)
         {
-            var query = new GetOfferByIdQuery(offerId);
+            var employeeId = User.FindFirst("RoleId")?.Value;
+
+            if (string.IsNullOrEmpty(employeeId))
+                return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "Identyfikator pracownika jest nieprawidłowy.");
+
+            var command = _mapper.Map<CreateOfferCommand>((request, employeeId));
+
+            var result = await _mediator.Send(command);
+
+            return result.Match(
+                offer => Ok(_mapper.Map<OfferResponse>(offer)),
+                errors => Problem(errors)
+            );
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetOffer(string id)
+        {
+            var query = new GetOfferByIdQuery(id);
 
             var result = await _mediator.Send(query);
 
@@ -68,6 +81,43 @@ namespace Bookings.Api.Controllers
                 offer => Ok(_mapper.Map<OfferResponse>(offer)),
                 errors => Problem(errors)
             );
+        }
+
+        [HttpPost("{id}")]
+        [Authorize(Roles = "Admin, Employee")]
+        public async Task<IActionResult> UpdateOffer(UpdateOfferRequest request, string id)
+        {
+            var employeeId = User.FindFirst("RoleId")?.Value;
+
+            if (string.IsNullOrEmpty(employeeId))   // If empty => UserRole: Admin
+                employeeId = Guid.Empty.ToString(); // Setting employeeId value for admin
+
+            var command = _mapper.Map<UpdateOfferCommand>((request, id, employeeId));
+
+            var result = await _mediator.Send(command);
+
+            return result.Match(
+                offer => Ok(_mapper.Map<OfferResponse>(offer)),
+                errors => Problem(errors)
+            );
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin, Employee")]
+        public async Task<IActionResult> DeleteOffer(string id)
+        {
+            var employeeId = User.FindFirst("RoleId")?.Value;
+
+            if (string.IsNullOrEmpty(employeeId))   // If empty => UserRole: Admin
+                employeeId = Guid.Empty.ToString(); // Setting employeeId value for admin
+
+            var command = new DeleteOfferCommand(id, employeeId);
+
+            var result = await _mediator.Send(command);
+
+            return result.Match(
+                r => Ok(),
+                errors => Problem(errors));
         }
 
         [HttpGet("myoffers")]
@@ -104,62 +154,6 @@ namespace Bookings.Api.Controllers
                 .ToList();
 
             return Ok(response);
-        }
-
-        [HttpPost("create")]
-        [Authorize(Roles = "Employee")]
-        public async Task<IActionResult> CreateOffer(CreateOfferRequest request)
-        {
-            var employeeId = User.FindFirst("RoleId")?.Value;
-
-            if (string.IsNullOrEmpty(employeeId))
-                return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "Identyfikator pracownika jest nieprawidłowy."); 
-
-            var command = _mapper.Map<CreateOfferCommand>((request, employeeId));
-
-            var result = await _mediator.Send(command);
-
-            return result.Match(
-                offer => Ok(_mapper.Map<OfferResponse>(offer)),
-                errors => Problem(errors)
-            );
-        }
-
-        [HttpPost("{offerId}/update")]
-        [Authorize(Roles = "Admin, Employee")]
-        public async Task<IActionResult> UpdateOffer(UpdateOfferRequest request, string offerId)
-        {
-            var employeeId = User.FindFirst("RoleId")?.Value;
-
-            if (string.IsNullOrEmpty(employeeId))   // If empty => UserRole: Admin
-                employeeId = Guid.Empty.ToString(); // Setting employeeId value for admin
-
-            var command = _mapper.Map<UpdateOfferCommand>((request, offerId, employeeId));
-
-            var result = await _mediator.Send(command);
-
-            return result.Match(
-                offer => Ok(_mapper.Map<OfferResponse>(offer)),
-                errors => Problem(errors)
-            );
-        }
-
-        [HttpDelete("{offerId}/delete")]
-        [Authorize(Roles = "Admin, Employee")]
-        public async Task<IActionResult> DeleteOffer(string offerId)
-        {
-            var employeeId = User.FindFirst("RoleId")?.Value;
-
-            if (string.IsNullOrEmpty(employeeId))   // If empty => UserRole: Admin
-                employeeId = Guid.Empty.ToString(); // Setting employeeId value for admin
-
-            var command = new DeleteOfferCommand(offerId, employeeId);
-
-            var result = await _mediator.Send(command);
-
-            return result.Match(
-                r => Ok(),
-                errors => Problem(errors));
         }
     }
 }

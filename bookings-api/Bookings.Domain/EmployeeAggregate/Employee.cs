@@ -1,4 +1,5 @@
 ﻿using Bookings.Domain.AppointmentAggregate.ValueObjects;
+using Bookings.Domain.Common.Exceptions;
 using Bookings.Domain.Common.Models;
 using Bookings.Domain.EmployeeAggregate.ValueObjects;
 using Bookings.Domain.OfferAggregate.ValueObjects;
@@ -28,13 +29,24 @@ namespace Bookings.Domain.EmployeeAggregate
             UpdatedAt = updatedAt;
         }
 
-        public static Employee CreateUnique(UserId userId)
+        public static Employee Create(UserId userId)
         {
             return new Employee(
                 EmployeeId.CrateUnique(),
                 userId,
                 DateTime.UtcNow,
                 DateTime.UtcNow);
+        }
+
+        public Employee AddAppointmentId(AppointmentId appointmentId)
+        {
+            if (_appointmentIds.Contains(appointmentId))
+                throw new DomainException("The appointment is already associated with this employee.");
+
+            _appointmentIds.Add(appointmentId);
+            UpdatedAt = DateTime.UtcNow;
+
+            return this;
         }
 
 #pragma warning disable CS8618

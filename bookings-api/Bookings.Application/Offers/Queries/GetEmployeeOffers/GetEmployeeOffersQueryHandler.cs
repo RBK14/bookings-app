@@ -52,7 +52,7 @@ namespace Bookings.Application.Offers.Queries.GetEmployeeOffers
 
             var sort = new OfferSort(query.SortBy);
 
-            return await _offerRepository.GetOffersAsync(filter, sort);
+            return await _offerRepository.SearchAsync(filter, sort);
         }
     }
 }

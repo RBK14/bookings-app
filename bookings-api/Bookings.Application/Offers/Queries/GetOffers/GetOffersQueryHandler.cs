@@ -54,7 +54,7 @@ namespace Bookings.Application.Offers.Queries.SearchOffers
 
             var sort = new OfferSort(query.SortBy);
 
-            return await _offerRepository.GetOffersAsync(filter, sort);
+            return await _offerRepository.SearchAsync(filter, sort);
         }
     }
 }

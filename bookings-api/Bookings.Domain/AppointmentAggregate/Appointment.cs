@@ -1,4 +1,5 @@
 ﻿using Bookings.Domain.AppointmentAggregate.Enums;
+using Bookings.Domain.AppointmentAggregate.Events;
 using Bookings.Domain.AppointmentAggregate.ValueObjects;
 using Bookings.Domain.ClientAggregate.ValueObjects;
 using Bookings.Domain.Common.Exceptions;
@@ -12,12 +13,9 @@ namespace Bookings.Domain.AppointmentAggregate
     public class Appointment : AggregateRoot<AppointmentId>
     {
         public OfferId OfferId { get; init; }
-
-        // Snapshot of the offer
         public string OfferName { get; init; }
         public Price OfferPrice { get; init; }
         public Duration OfferDuration { get; init; }
-
         public EmployeeId EmployeeId { get; init; }
         public ClientId ClientId { get; init; }
         public AppointmentTime Time { get; private set; }
@@ -53,18 +51,16 @@ namespace Bookings.Domain.AppointmentAggregate
             UpdatedAt = updatedAt;
         }
 
-        public static Appointment CreateUnique(
+        public static Appointment Create(
             OfferId offerId,
             string offerName,
             Price offerPrice,
             Duration offerDuration,
             EmployeeId employeeId,
             ClientId clientId,
-            DateTime startTime,
-            AppointmentStatus appointmentStatus,
-            CancellationBy cancelledBy)
+            DateTime startTime)
         {
-            return new Appointment(
+            var appointment = new Appointment(
                 AppointmentId.CreateUnique(),
                 offerId,
                 offerName,
@@ -77,6 +73,10 @@ namespace Bookings.Domain.AppointmentAggregate
                 CancellationBy.None,
                 DateTime.UtcNow,
                 DateTime.UtcNow);
+
+            appointment.AddDomainEvent(new AppointmentCreatedEvent(appointment));
+
+            return appointment;
         }
 
         public Appointment Confirm()

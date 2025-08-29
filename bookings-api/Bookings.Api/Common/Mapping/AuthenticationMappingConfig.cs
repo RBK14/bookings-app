@@ -1,5 +1,4 @@
 ﻿using Bookings.Application.Authentication.Commands.Register;
-using Bookings.Application.Authentication.Common;
 using Bookings.Application.Authentication.Queries.Login;
 using Bookings.Contracts.Authentication;
 using Mapster;

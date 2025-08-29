@@ -5,14 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bookings.Infrastructure.Persistence.Repositories
 {
-    public class OfferRepository : IOfferRepository
+    public class OfferRepository(BookingsDbContext dbContext) : IOfferRepository
     {
-        private readonly BookingsDbContext _dbContext;
-
-        public OfferRepository(BookingsDbContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
+        private readonly BookingsDbContext _dbContext = dbContext;
 
         public async Task AddAsync(Offer offer)
         {
@@ -20,16 +15,21 @@ namespace Bookings.Infrastructure.Persistence.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Offer>> GetOffersAsync()
+        public async Task<Offer?> GetByIdAsync(OfferId offerId)
         {
-            return await _dbContext.Offers.ToListAsync();
+            return await _dbContext.Offers
+                .Include(o => o.AppointmentIds)
+                .SingleOrDefaultAsync(o => o.Id == offerId);
         }
 
-        public async Task<IEnumerable<Offer>> GetOffersAsync(
+        public async Task<IEnumerable<Offer>> SearchAsync(
             IEnumerable<IFilterable<Offer>>? filters,
             ISortable<Offer>? sort)
         {
-            var offers = await _dbContext.Offers.ToListAsync();
+            var offers = await _dbContext.Offers
+                .Include(o => o.AppointmentIds)
+                .ToListAsync();
+
             var offersQuery = offers.AsQueryable();
 
             if (filters is not null)
@@ -46,18 +46,13 @@ namespace Bookings.Infrastructure.Persistence.Repositories
             return offersQuery;
         }
 
-        public async Task<Offer?> GetByIdAsync(OfferId offerId)
-        {
-            return await _dbContext.Offers.FindAsync(offerId);
-        }
-
-        public async Task UpdateOfferAsync(Offer offer)
+        public async Task UpdateAsync(Offer offer)
         {
             _dbContext.Offers.Update(offer);
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteOfferAsync(Offer offer)
+        public async Task DeleteAsync(Offer offer)
         {
             _dbContext.Offers.Remove(offer);
             await _dbContext.SaveChangesAsync();

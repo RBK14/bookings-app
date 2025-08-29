@@ -19,7 +19,6 @@ namespace Bookings.Api.Common.Mapping
                 .Map(dest => dest.EmployeeId, src => src.EmployeeId)
                 .Map(dest => dest, src => src.Request);
 
-
             config.NewConfig<Offer, OfferResponse>()
                 .Map(dest => dest.Id, src => src.Id.Value)
                 .Map(dest => dest.EmployeeId, src => src.EmployeeId.Value)

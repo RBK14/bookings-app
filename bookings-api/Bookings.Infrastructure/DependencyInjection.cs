@@ -24,21 +24,22 @@ namespace Bookings.Infrastructure
         {
             services
                 .AddAuth(configuration)
-                .AddPersistence();
+                .AddPersistence(configuration);
 
             services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
             return services;
         }
 
-        public static IServiceCollection AddPersistence(this IServiceCollection services)
+        public static IServiceCollection AddPersistence(this IServiceCollection services, ConfigurationManager configuration)
         {
             services.AddDbContext<BookingsDbContext>(options =>
-                options.UseSqlServer("Server=DESKTOP-0BLV7GP;Database=Bookings;Trusted_Connection=True;Encrypt=True;TrustServerCertificate=True;"));
+                options.UseSqlServer(configuration.GetConnectionString("SqlServer")));
 
             services.AddScoped<PublishDomainEventInterceptor>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IOfferRepository, OfferRepository>();
+            services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<IClientRepository, ClientRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
