@@ -120,6 +120,7 @@ namespace Bookings.Api.Controllers
                 errors => Problem(errors));
         }
 
+        // TODO: Endpoint do usunięcia
         [HttpGet("myoffers")]
         [Authorize(Roles = "Employee")]
         public async Task<IActionResult> GetEmployeeOffers(

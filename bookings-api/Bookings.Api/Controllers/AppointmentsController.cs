@@ -1,4 +1,5 @@
 ﻿using Bookings.Application.Appointments.Commands.CreateAppointment;
+using Bookings.Application.Appointments.Commands.DeleteAppointment;
 using Bookings.Contracts.Appointments;
 using MapsterMapper;
 using MediatR;
@@ -12,6 +13,25 @@ namespace Bookings.Api.Controllers
     {
         private readonly ISender _mediator = mediator;
         private readonly IMapper _mapper = mapper;
+
+        [HttpGet]
+        public async Task<IActionResult> GetAppoinments(
+            [FromQuery] string? name,
+            [FromQuery] decimal? maxPrice,
+            [FromQuery] decimal? minPrice,
+            [FromQuery] int? currency,
+            [FromQuery] string? minDuration,
+            [FromQuery] string? maxDuration,
+            [FromQuery] string? employeeId,
+            [FromQuery] string? clientId,
+            [FromQuery] DateTime? starts,
+            [FromQuery] DateTime? ends,
+            [FromQuery] string? status,
+            [FromQuery] string? description,
+            [FromQuery] string? sortBy)
+        {
+            return Ok();
+        }
 
         [HttpPost]
         [Authorize(Roles = "Client")]
@@ -30,6 +50,19 @@ namespace Bookings.Api.Controllers
                 appointment => Ok(_mapper.Map<AppointmentResponse>(appointment)),
                 errors => Problem(errors)
             );
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteAppointment(string id)
+        {
+            var command = new DeleteAppointmentCommand(id);
+
+            var result = await _mediator.Send(command);
+
+            return result.Match(
+                r => Ok(),
+                errors => Problem(errors));
         }
     }
 }

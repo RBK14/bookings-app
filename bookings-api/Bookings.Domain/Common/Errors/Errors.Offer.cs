@@ -8,7 +8,7 @@ namespace Bookings.Domain.Common.Errors
         {
             public static Error NotFound => Error.NotFound(
                 code: "Offer.NotFound",
-                description: "Nie znaleziono żadnej oferty.");
+                description: "Nie znaleziono oferty spełniającej wymagania.");
         }
     }
 }
