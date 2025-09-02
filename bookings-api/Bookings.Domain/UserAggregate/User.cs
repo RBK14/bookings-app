@@ -1,4 +1,4 @@
-﻿ using Bookings.Domain.Common.Exceptions;
+﻿using Bookings.Domain.Common.Exceptions;
 using Bookings.Domain.Common.Models;
 using Bookings.Domain.Common.ValueObjects;
 using Bookings.Domain.UserAggregate.Enums;

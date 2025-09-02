@@ -1,4 +1,5 @@
-﻿using Bookings.Application.Users.Queries.GetUser;
+﻿using Bookings.Application.Users.Commands.UpdateUser;
+using Bookings.Application.Users.Queries.GetUser;
 using Bookings.Application.Users.Queries.GetUsers;
 using Bookings.Contracts.Appointments;
 using Bookings.Contracts.Users;
@@ -45,6 +46,7 @@ namespace Bookings.Api.Controllers
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+            id = id.ToLower();
             if (string.IsNullOrWhiteSpace(userId))
                 return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "Identyfikator użytownika jest nieprawidłowy.");
 
@@ -63,6 +65,31 @@ namespace Bookings.Api.Controllers
                 errors => Problem(errors));
         }
 
+        [HttpPost("{id}")]
+        public async Task<IActionResult> UpdateUser(UpdateUserRequest request, string id)
+        {
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrWhiteSpace(userId))
+                return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "Identyfikator użytownika jest nieprawidłowy.");
+
+            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
+            bool isAdmin = Enum.TryParse<UserRole>(userRole, out var role) && role == UserRole.Admin;
+
+            id = id.ToLower();
+            if (id != userId && !isAdmin)
+                return Problem(statusCode: StatusCodes.Status403Forbidden, title: "Brak dostępu do zawartości");
+
+            var command = _mapper.Map<UpdateUserCommand>((request, id));
+
+            var result = await _mediator.Send(command);
+
+            return result.Match(
+                user => Ok(_mapper.Map<UserResponse>(user)),
+                errors => Problem(errors));
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
@@ -71,6 +98,7 @@ namespace Bookings.Api.Controllers
             if (string.IsNullOrWhiteSpace(userId))
                 return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "Identyfikator użytownika jest nieprawidłowy.");
 
+            id = id.ToLower();
             var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
             bool isAdmin = Enum.TryParse<UserRole>(userRole, out var role) && role == UserRole.Admin;
 
