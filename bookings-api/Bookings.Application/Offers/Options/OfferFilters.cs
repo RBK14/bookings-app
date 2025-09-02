@@ -5,32 +5,24 @@ using Bookings.Domain.OfferAggregate;
 
 namespace Bookings.Application.Offers.Options
 {
-    public class NameFilter : IFilterable<Offer>
+    public class NameFilter(string? name) : IFilterable<Offer>
     {
-        private readonly string? _name;
-
-        public NameFilter(string? name)
-        {
-            _name = name;
-        }
+        private readonly string? _name = name;
 
         public IQueryable<Offer> Apply(IQueryable<Offer> query)
         {
             if (string.IsNullOrWhiteSpace(_name))
                 return query;
 
-            return query.Where(o => o.Name.Contains(_name));
+            var lowered = _name.ToLower();
+
+            return query.Where(o => o.Name.ToLower().Contains(lowered));
         }
     }
 
-    public class EmployeeIdFilter : IFilterable<Offer>
+    public class EmployeeIdFilter(EmployeeId? employeeId) : IFilterable<Offer>
     {
-        private readonly EmployeeId? _employeeId;
-
-        public EmployeeIdFilter(EmployeeId? employeeId)
-        {
-            _employeeId = employeeId;
-        }
+        private readonly EmployeeId? _employeeId = employeeId;
 
         public IQueryable<Offer> Apply(IQueryable<Offer> query)
         {
@@ -41,16 +33,10 @@ namespace Bookings.Application.Offers.Options
         }
     }
 
-    public class PriceRangeFilter : IFilterable<Offer>
+    public class PriceRangeFilter(Price? minPrice, Price? maxPrice) : IFilterable<Offer>
     {
-        private readonly Price? _minPrice;
-        private readonly Price? _maxPrice;
-
-        public PriceRangeFilter(Price? minPrice, Price? maxPrice)
-        {
-            _minPrice = minPrice;
-            _maxPrice = maxPrice;
-        }
+        private readonly Price? _minPrice = minPrice;
+        private readonly Price? _maxPrice = maxPrice;
 
         public IQueryable<Offer> Apply(IQueryable<Offer> query)
         {
@@ -64,16 +50,10 @@ namespace Bookings.Application.Offers.Options
         }
     }
 
-    public class DurationRangeFilter : IFilterable<Offer>
+    public class DurationRangeFilter(Duration? minDuration, Duration? maxDuration) : IFilterable<Offer>
     {
-        private readonly Duration? _minDuration;
-        private readonly Duration? _maxDuration;
-
-        public DurationRangeFilter(Duration? minDuration, Duration? maxDuration)
-        {
-            _minDuration = minDuration;
-            _maxDuration = maxDuration;
-        }
+        private readonly Duration? _minDuration = minDuration;
+        private readonly Duration? _maxDuration = maxDuration;
 
         public IQueryable<Offer> Apply(IQueryable<Offer> query)
         {

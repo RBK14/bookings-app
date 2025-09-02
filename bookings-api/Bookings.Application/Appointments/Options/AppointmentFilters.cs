@@ -16,20 +16,16 @@ namespace Bookings.Application.Appointments.Options
             if (string.IsNullOrWhiteSpace(_name))
                 return query;
 
-            return query.Where(a => a.OfferName.Contains(_name));
+            var lowered = _name.ToLower();
+
+            return query.Where(a => a.OfferName.ToLower().Contains(lowered));
         }
     }
 
-    public class PriceRangeFilter : IFilterable<Appointment>
+    public class PriceRangeFilter(Price? minPrice, Price? maxPrice) : IFilterable<Appointment>
     {
-        private readonly Price? _minPrice;
-        private readonly Price? _maxPrice;
-
-        public PriceRangeFilter(Price? minPrice, Price? maxPrice)
-        {
-            _minPrice = minPrice;
-            _maxPrice = maxPrice;
-        }
+        private readonly Price? _minPrice = minPrice;
+        private readonly Price? _maxPrice = maxPrice;
 
         public IQueryable<Appointment> Apply(IQueryable<Appointment> query)
         {
