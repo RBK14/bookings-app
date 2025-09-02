@@ -1,7 +1,6 @@
 ﻿using Bookings.Application.Offers.Commands.CreateOffer;
 using Bookings.Application.Offers.Commands.DeleteOffer;
 using Bookings.Application.Offers.Commands.UpdateOffer;
-using Bookings.Application.Offers.Queries.GetEmployeeOffers;
 using Bookings.Application.Offers.Queries.GetOfferById;
 using Bookings.Application.Offers.Queries.SearchOffers;
 using Bookings.Contracts.Offers;
@@ -9,7 +8,6 @@ using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Bookings.Api.Controllers
 {
@@ -118,43 +116,6 @@ namespace Bookings.Api.Controllers
             return result.Match(
                 r => Ok(),
                 errors => Problem(errors));
-        }
-
-        // TODO: Endpoint do usunięcia
-        [HttpGet("myoffers")]
-        [Authorize(Roles = "Employee")]
-        public async Task<IActionResult> GetEmployeeOffers(
-            [FromQuery] string? name,
-            [FromQuery] decimal? minPrice,
-            [FromQuery] decimal? maxPrice,
-            [FromQuery] int? currency,
-            [FromQuery] string? minDuration,
-            [FromQuery] string? maxDuration,
-            [FromQuery] string? sortBy)
-        {
-            var employeeId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (string.IsNullOrEmpty(employeeId))
-                return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "Identyfikator pracownika jest nieprawidłowy.");
-
-            var query = new GetEmployeeOffersQuery(
-                EmployeeId: employeeId,
-                Name: name,
-                MinPrice: minPrice,
-                MaxPrice: maxPrice,
-                Currency: currency,
-                MinDuration: minDuration,
-                MaxDuration: maxDuration,
-                SortBy: sortBy
-            );
-
-            var result = await _mediator.Send(query);
-
-            var response = result
-                .Select(o => _mapper.Map<OfferResponse>(o))
-                .ToList();
-
-            return Ok(response);
         }
     }
 }
