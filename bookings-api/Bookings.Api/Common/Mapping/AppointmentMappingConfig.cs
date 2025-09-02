@@ -29,8 +29,6 @@ namespace Bookings.Api.Common.Mapping
                 .Map(dest => dest.ClientId, src => src.ClientId.Value)
                 .Map(dest => dest.StartTime, src => src.Time.Start)
                 .Map(dest => dest.EndTime, src => src.Time.End);
-                //.Map(dest => dest.Status, src => src.Status)
-                //.Map(dest => dest.CancelledBy, src => src.CancelledBy);
         }
     }
 }

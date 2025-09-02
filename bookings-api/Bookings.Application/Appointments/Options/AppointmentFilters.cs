@@ -114,9 +114,7 @@ namespace Bookings.Application.Appointments.Options
         public IQueryable<Appointment> Apply(IQueryable<Appointment> query)
         {
             if (_status.HasValue)
-            {
                 query = query.Where(a => a.Status == _status.Value);
-            }
 
             return query;
         }

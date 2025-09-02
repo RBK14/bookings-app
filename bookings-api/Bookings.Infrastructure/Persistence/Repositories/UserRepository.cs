@@ -25,9 +25,24 @@ namespace Bookings.Infrastructure.Persistence.Repositories
             return await _dbContext.Users.SingleOrDefaultAsync(u => u.Email.Value == email.Value);
         }
 
-        public Task<IEnumerable<User>> SearchAsync(IEnumerable<IFilterable<User>> filters, ISortable<User> sort)
+        public async Task<IEnumerable<User>> SearchAsync(
+            IEnumerable<IFilterable<User>> filters,
+            ISortable<User> sort)
         {
-            throw new NotImplementedException();
+            var users = await _dbContext.Users.ToListAsync();
+
+            var usersQuery = users.AsQueryable();
+
+            if (filters is not null)
+                foreach (var filter in filters)
+                {
+                    usersQuery = filter.Apply(usersQuery);
+                }
+
+            if (sort is not null)
+                usersQuery = sort.Apply(usersQuery);
+
+            return usersQuery;
         }
 
         public async Task UpdateAsync(User user)

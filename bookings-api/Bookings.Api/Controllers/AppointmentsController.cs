@@ -50,11 +50,11 @@ namespace Bookings.Api.Controllers
 
             var result = await _mediator.Send(query);
 
-            var resposne = result
+            var response = result
                 .Select (a => _mapper.Map<AppointmentResponse>(a))
                 .ToList ();
 
-            return Ok(resposne);
+            return Ok(response);
         }
 
         [HttpPost]
