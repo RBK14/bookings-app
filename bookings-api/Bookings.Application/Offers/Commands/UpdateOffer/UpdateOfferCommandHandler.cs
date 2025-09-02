@@ -10,14 +10,9 @@ using MediatR;
 
 namespace Bookings.Application.Offers.Commands.UpdateOffer
 {
-    public class UpdateOfferCommandHandler : IRequestHandler<UpdateOfferCommand, ErrorOr<Offer>>
+    public class UpdateOfferCommandHandler(IOfferRepository offerRepository) : IRequestHandler<UpdateOfferCommand, ErrorOr<Offer>>
 {
-        private readonly IOfferRepository _offerRepository;
-
-        public UpdateOfferCommandHandler(IOfferRepository offerRepository)
-        {
-            _offerRepository = offerRepository;
-        }
+        private readonly IOfferRepository _offerRepository = offerRepository;
 
         public async Task<ErrorOr<Offer>> Handle(UpdateOfferCommand command, CancellationToken cancellationToken)
         {

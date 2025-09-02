@@ -1,7 +1,11 @@
 ﻿using Bookings.Application.Appointments.Commands.CreateAppointment;
 using Bookings.Application.Appointments.Commands.DeleteAppointment;
+using Bookings.Application.Appointments.Commands.UpdateAppointment;
+using Bookings.Application.Appointments.Queries.GetAppointment;
 using Bookings.Application.Appointments.Queries.GetAppointments;
+using Bookings.Application.Offers.Commands.UpdateOffer;
 using Bookings.Contracts.Appointments;
+using Bookings.Contracts.Offers;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -71,6 +75,40 @@ namespace Bookings.Api.Controllers
                 errors => Problem(errors)
             );
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAppointment(string id)
+        {
+            var query = new GetAppointmentQuery(id);
+
+            var result = await _mediator.Send(query);
+
+            return result.Match(
+                appointment => Ok(_mapper.Map<AppointmentResponse>(appointment)),
+                errors => Problem(errors)
+            );
+        }
+
+        [HttpPost("{id}")]
+        [Authorize(Roles = "Admin, Employee")]
+        public async Task<IActionResult> UpdateAppointment(UpdateAppointmentRequest request, string id)
+        {
+            var employeeId = User.FindFirst("RoleId")?.Value;
+
+            if (string.IsNullOrEmpty(employeeId))   // If empty => UserRole: Admin
+                employeeId = Guid.Empty.ToString(); // Setting employeeId value for admin
+
+            var command = _mapper.Map<UpdateAppointmentCommand>((request, id, employeeId));
+
+            var result = await _mediator.Send(command);
+
+            return result.Match(
+                appointment => Ok(_mapper.Map<AppointmentResponse>(appointment)),
+                errors => Problem(errors)
+            );
+        }
+
+
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]

@@ -1,4 +1,5 @@
 ﻿using Bookings.Application.Appointments.Commands.CreateAppointment;
+using Bookings.Application.Appointments.Commands.UpdateAppointment;
 using Bookings.Contracts.Appointments;
 using Bookings.Domain.AppointmentAggregate;
 using Mapster;
@@ -11,6 +12,11 @@ namespace Bookings.Api.Common.Mapping
         {
             config.NewConfig<(CreateAppointmentRequest Request, string ClientId), CreateAppointmentCommand>()
                 .Map(dest => dest.ClientId, src => src.ClientId)
+                .Map(dest => dest, src => src.Request);
+
+            config.NewConfig<(UpdateAppointmentRequest Request, string AppointmentId, string EmployeeId), UpdateAppointmentCommand>()
+                .Map(dest => dest.AppointmentId, src => src.AppointmentId)
+                .Map(dest => dest.EmployeeId, src => src.EmployeeId)
                 .Map(dest => dest, src => src.Request);
 
             config.NewConfig<Appointment, AppointmentResponse>()

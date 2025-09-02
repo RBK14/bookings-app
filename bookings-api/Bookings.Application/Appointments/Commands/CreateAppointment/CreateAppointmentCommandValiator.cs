@@ -13,6 +13,7 @@ namespace Bookings.Application.Appointments.Commands.CreateAppointment
                 .NotEmpty().WithMessage("Id klienta jest wymagane.");
 
             RuleFor(x => x.StartTime)
+                .NotEmpty().WithMessage("Data i godzina rozpoczęcia są wymagane.")
                 .GreaterThan(DateTime.UtcNow).WithMessage("Data rozpoczęcia musi być w przyszłości.");
         }
     }

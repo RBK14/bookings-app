@@ -1,7 +1,7 @@
 ﻿using Bookings.Application.Offers.Commands.CreateOffer;
 using Bookings.Application.Offers.Commands.DeleteOffer;
 using Bookings.Application.Offers.Commands.UpdateOffer;
-using Bookings.Application.Offers.Queries.GetOfferById;
+using Bookings.Application.Offers.Queries.GetOffer;
 using Bookings.Application.Offers.Queries.SearchOffers;
 using Bookings.Contracts.Offers;
 using MapsterMapper;
@@ -71,7 +71,7 @@ namespace Bookings.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOffer(string id)
         {
-            var query = new GetOfferByIdQuery(id);
+            var query = new GetOfferQuery(id);
 
             var result = await _mediator.Send(query);
 

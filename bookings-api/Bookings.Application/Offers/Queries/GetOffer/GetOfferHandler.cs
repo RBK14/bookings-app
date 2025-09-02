@@ -5,18 +5,18 @@ using Bookings.Domain.OfferAggregate.ValueObjects;
 using ErrorOr;
 using MediatR;
 
-namespace Bookings.Application.Offers.Queries.GetOfferById
+namespace Bookings.Application.Offers.Queries.GetOffer
 {
-    public class GetOfferByIdHandler : IRequestHandler<GetOfferByIdQuery, ErrorOr<Offer>>
+    public class GetOfferHandler : IRequestHandler<GetOfferQuery, ErrorOr<Offer>>
     {
         private readonly IOfferRepository _offerRepository;
 
-        public GetOfferByIdHandler(IOfferRepository offerRepository)
+        public GetOfferHandler(IOfferRepository offerRepository)
         {
             _offerRepository = offerRepository;
         }
 
-        public async Task<ErrorOr<Offer>> Handle(GetOfferByIdQuery query, CancellationToken cancellationToken)
+        public async Task<ErrorOr<Offer>> Handle(GetOfferQuery query, CancellationToken cancellationToken)
         {
             var offerId = OfferId.Create(query.OfferId);
 
