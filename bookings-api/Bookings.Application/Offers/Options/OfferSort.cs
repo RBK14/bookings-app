@@ -1,7 +1,7 @@
 ﻿using Bookings.Application.Common.Interfaces.Persistence;
 using Bookings.Domain.OfferAggregate;
 
-namespace Bookings.Application.Offers.Filters
+namespace Bookings.Application.Offers.Options
 {
     public class OfferSort : ISortable<Offer>
     {

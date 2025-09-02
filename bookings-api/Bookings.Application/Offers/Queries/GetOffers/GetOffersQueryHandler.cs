@@ -1,10 +1,9 @@
 ﻿using Bookings.Application.Common.Interfaces.Persistence;
-using Bookings.Application.Offers.Filters;
+using Bookings.Application.Offers.Options;
 using Bookings.Domain.Common.Enums;
 using Bookings.Domain.Common.ValueObjects;
 using Bookings.Domain.EmployeeAggregate.ValueObjects;
 using Bookings.Domain.OfferAggregate;
-using Bookings.Infrastructure.Persistence.Offers;
 using MediatR;
 
 namespace Bookings.Application.Offers.Queries.SearchOffers
@@ -44,7 +43,7 @@ namespace Bookings.Application.Offers.Queries.SearchOffers
                 ? Duration.Create(query.MaxDuration)
                 : null;
 
-            var filter = new List<IFilterable<Offer>>
+            var filters = new List<IFilterable<Offer>>
             {
                 new NameFilter(query.Name),
                 new EmployeeIdFilter(employeeId),
@@ -54,7 +53,7 @@ namespace Bookings.Application.Offers.Queries.SearchOffers
 
             var sort = new OfferSort(query.SortBy);
 
-            return await _offerRepository.SearchAsync(filter, sort);
+            return await _offerRepository.SearchAsync(filters, sort);
         }
     }
 }

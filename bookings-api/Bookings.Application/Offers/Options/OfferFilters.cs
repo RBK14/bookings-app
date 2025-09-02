@@ -3,7 +3,7 @@ using Bookings.Domain.Common.ValueObjects;
 using Bookings.Domain.EmployeeAggregate.ValueObjects;
 using Bookings.Domain.OfferAggregate;
 
-namespace Bookings.Infrastructure.Persistence.Offers
+namespace Bookings.Application.Offers.Options
 {
     public class NameFilter : IFilterable<Offer>
     {
@@ -25,24 +25,24 @@ namespace Bookings.Infrastructure.Persistence.Offers
 
     public class EmployeeIdFilter : IFilterable<Offer>
     {
-        private readonly EmployeeId? _employeeID;
+        private readonly EmployeeId? _employeeId;
 
-        public EmployeeIdFilter(EmployeeId? employeeID)
+        public EmployeeIdFilter(EmployeeId? employeeId)
         {
-            _employeeID = employeeID;
+            _employeeId = employeeId;
         }
 
         public IQueryable<Offer> Apply(IQueryable<Offer> query)
         {
-            if (_employeeID is not null && !string.IsNullOrWhiteSpace(_employeeID.Value.ToString()))
-                query = query.Where(o => o.EmployeeId.Equals(_employeeID));
+            if (_employeeId is not null && !string.IsNullOrWhiteSpace(_employeeId.Value.ToString()))
+                query = query.Where(o => o.EmployeeId.Equals(_employeeId));
 
             return query;
         }
     }
 
-        public class PriceRangeFilter : IFilterable<Offer>
-        {
+    public class PriceRangeFilter : IFilterable<Offer>
+    {
         private readonly Price? _minPrice;
         private readonly Price? _maxPrice;
 

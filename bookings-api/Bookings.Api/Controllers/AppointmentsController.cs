@@ -1,5 +1,6 @@
 ﻿using Bookings.Application.Appointments.Commands.CreateAppointment;
 using Bookings.Application.Appointments.Commands.DeleteAppointment;
+using Bookings.Application.Appointments.Queries.GetAppointments;
 using Bookings.Contracts.Appointments;
 using MapsterMapper;
 using MediatR;
@@ -17,8 +18,8 @@ namespace Bookings.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAppoinments(
             [FromQuery] string? name,
-            [FromQuery] decimal? maxPrice,
             [FromQuery] decimal? minPrice,
+            [FromQuery] decimal? maxPrice,
             [FromQuery] int? currency,
             [FromQuery] string? minDuration,
             [FromQuery] string? maxDuration,
@@ -27,10 +28,29 @@ namespace Bookings.Api.Controllers
             [FromQuery] DateTime? starts,
             [FromQuery] DateTime? ends,
             [FromQuery] string? status,
-            [FromQuery] string? description,
             [FromQuery] string? sortBy)
         {
-            return Ok();
+            var query = new GetAppointmentsQuery(
+                Name: name,
+                MinPrice: minPrice,
+                MaxPrice: maxPrice,
+                Currency: currency,
+                MinDuration: minDuration,
+                MaxDuration: maxDuration,
+                EmployeeId: employeeId,
+                ClientId: clientId,
+                Starts: starts,
+                Ends: ends,
+                Status: status,
+                SortBy: sortBy);
+
+            var result = await _mediator.Send(query);
+
+            var resposne = result
+                .Select (a => _mapper.Map<AppointmentResponse>(a))
+                .ToList ();
+
+            return Ok(resposne);
         }
 
         [HttpPost]

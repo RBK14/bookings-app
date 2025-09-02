@@ -1,6 +1,7 @@
 ﻿using Bookings.Application.Common.Interfaces.Persistence;
 using Bookings.Domain.AppointmentAggregate;
 using Bookings.Domain.AppointmentAggregate.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bookings.Infrastructure.Persistence.Repositories
 {
@@ -18,9 +19,24 @@ namespace Bookings.Infrastructure.Persistence.Repositories
             return await _dbContext.Appointments.FindAsync(appointmentId);
         }
 
-        public Task<IEnumerable<Appointment>> SearchAsync(IEnumerable<IFilterable<Appointment>>? filters, ISortable<Appointment>? sort)
+        public async Task<IEnumerable<Appointment>> SearchAsync(
+            IEnumerable<IFilterable<Appointment>>? filters,
+            ISortable<Appointment>? sort)
         {
-            throw new NotImplementedException();
+            var appointments = await _dbContext.Appointments.ToListAsync();
+
+            var appointmentsQuery = appointments.AsQueryable();
+
+            if (filters is not null)
+                foreach (var filter in filters)
+                {
+                    appointmentsQuery = filter.Apply(appointmentsQuery);
+                }
+
+            if (sort is not null)
+                appointmentsQuery = sort.Apply(appointmentsQuery);
+
+            return appointmentsQuery;
         }
 
         public async Task UpdateAsync(Appointment appointment)
