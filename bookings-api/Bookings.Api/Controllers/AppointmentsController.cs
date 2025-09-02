@@ -16,7 +16,7 @@ namespace Bookings.Api.Controllers
         private readonly IMapper _mapper = mapper;
 
         [HttpGet]
-        public async Task<IActionResult> GetAppoinments(
+        public async Task<IActionResult> GetAppointments(
             [FromQuery] string? name,
             [FromQuery] decimal? minPrice,
             [FromQuery] decimal? maxPrice,
