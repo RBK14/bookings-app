@@ -38,6 +38,17 @@ namespace Bookings.Domain.EmployeeAggregate
                 DateTime.UtcNow);
         }
 
+        public Employee AddOfferId(OfferId offerId)
+        {
+            if (_offerIds.Contains(offerId))
+                throw new DomainException("The offer is already associated with this employee.");
+
+            _offerIds.Add(offerId);
+            UpdatedAt = DateTime.UtcNow;
+
+            return this;
+        }
+
         public Employee AddAppointmentId(AppointmentId appointmentId)
         {
             if (_appointmentIds.Contains(appointmentId))

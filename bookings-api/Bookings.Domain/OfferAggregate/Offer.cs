@@ -4,6 +4,7 @@ using Bookings.Domain.Common.Exceptions;
 using Bookings.Domain.Common.Models;
 using Bookings.Domain.Common.ValueObjects;
 using Bookings.Domain.EmployeeAggregate.ValueObjects;
+using Bookings.Domain.OfferAggregate.Events;
 using Bookings.Domain.OfferAggregate.ValueObjects;
 
 namespace Bookings.Domain.OfferAggregate
@@ -57,6 +58,8 @@ namespace Bookings.Domain.OfferAggregate
                 Duration.Create(duration),
                 DateTime.UtcNow,
                 DateTime.UtcNow);
+
+            offer.AddDomainEvent(new OfferCreatedEvent(offer));
 
             return offer;
         }
