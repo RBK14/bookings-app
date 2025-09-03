@@ -9,7 +9,7 @@ namespace Bookings.Application.Common.Interfaces.Persistence
         Task AddAsync(Client client);
         Task<Client?> GetByIdAsync(ClientId clientId);
         Task<Client?> GetByUserIdAsync(UserId userId);
-        Task<IEnumerable<Client>> SearchAsync(IEnumerable<IFilterable<Client>>? filters, ISortable<Client>? sort);
+        Task<IEnumerable<Client>> GetAllAsync();
         Task UpdateAsync(Client client);
         Task DeleteAsync(Client client);
     }

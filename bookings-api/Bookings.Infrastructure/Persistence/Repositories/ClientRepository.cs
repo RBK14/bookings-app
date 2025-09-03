@@ -18,17 +18,23 @@ namespace Bookings.Infrastructure.Persistence.Repositories
 
         public async Task<Client?> GetByIdAsync(ClientId clientId)
         {
-            return await _dbContext.Clients.FindAsync(clientId);
+            return await _dbContext.Clients
+                .Include(c => c.AppointmentIds)
+                .SingleOrDefaultAsync(c => c.Id == clientId);
         }
 
         public async Task<Client?> GetByUserIdAsync(UserId userId)
         {
-            return await _dbContext.Clients.SingleOrDefaultAsync(c => c.UserId == userId);
+            return await _dbContext.Clients
+                .Include(c => c.AppointmentIds)
+                .SingleOrDefaultAsync(c => c.UserId == userId);
         }
 
-        public Task<IEnumerable<Client>> SearchAsync(IEnumerable<IFilterable<Client>>? filters, ISortable<Client>? sort)
+        public async Task<IEnumerable<Client>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _dbContext.Clients
+                .Include(c => c.AppointmentIds)
+                .ToListAsync();
         }
 
         public async Task UpdateAsync(Client client)
