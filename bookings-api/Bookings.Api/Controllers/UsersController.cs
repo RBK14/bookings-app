@@ -1,7 +1,6 @@
 ﻿using Bookings.Application.Users.Commands.UpdateUser;
 using Bookings.Application.Users.Queries.GetUser;
 using Bookings.Application.Users.Queries.GetUsers;
-using Bookings.Contracts.Appointments;
 using Bookings.Contracts.Users;
 using Bookings.Domain.UserAggregate.Enums;
 using MapsterMapper;
@@ -53,6 +52,7 @@ namespace Bookings.Api.Controllers
             var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
             bool isAdmin = Enum.TryParse<UserRole>(userRole, out var role) && role == UserRole.Admin;
 
+            // TODO: Replace with policy to check if current user can access this user's profile
             if (id != userId && !isAdmin)
                 return Problem(statusCode: StatusCodes.Status403Forbidden, title: "Brak dostępu do zawartości");
 
@@ -68,7 +68,6 @@ namespace Bookings.Api.Controllers
         [HttpPost("{id}")]
         public async Task<IActionResult> UpdateUser(UpdateUserRequest request, string id)
         {
-
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (string.IsNullOrWhiteSpace(userId))
@@ -78,6 +77,8 @@ namespace Bookings.Api.Controllers
             bool isAdmin = Enum.TryParse<UserRole>(userRole, out var role) && role == UserRole.Admin;
 
             id = id.ToLower();
+
+            // TODO: Replace with policy to check if current user can update this user's profile
             if (id != userId && !isAdmin)
                 return Problem(statusCode: StatusCodes.Status403Forbidden, title: "Brak dostępu do zawartości");
 
@@ -102,6 +103,7 @@ namespace Bookings.Api.Controllers
             var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
             bool isAdmin = Enum.TryParse<UserRole>(userRole, out var role) && role == UserRole.Admin;
 
+            // TODO: Replace with policy to check if current user can delete this user
             if (id != userId && !isAdmin)
                 return Problem(statusCode: StatusCodes.Status403Forbidden, title: "Brak dostępu do zawartości");
 

@@ -25,7 +25,7 @@ namespace Bookings.Api.Common.Mapping
                 .Map(dest => dest.Amount, src => src.Price.Amount)
                 .Map(dest => dest.Currency, src => src.Price.Currency)
                 .Map(dest => dest.Duration, src => src.Duration.Value)
-                .Map(dest => dest.Appointments, src => src.AppointmentIds.Select(appointmentId => appointmentId.Value));
+                .Map(dest => dest.AppointmentIds, src => src.AppointmentIds.Select(appointmentId => appointmentId.Value));
         }
     }
 }

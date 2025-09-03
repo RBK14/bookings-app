@@ -8,7 +8,7 @@
         decimal Amount,
         int Currency,
         TimeSpan Duration,
-        List<string> Appointments,
+        List<string> AppointmentIds,
         DateTime CreatedAt,
         DateTime UpdatedAt);
 }

@@ -1,4 +1,5 @@
 ﻿using Bookings.Application.Authentication.Commands.Register;
+using Bookings.Application.Authentication.Commands.UpdatePassword;
 using Bookings.Application.Authentication.Queries.Login;
 using Bookings.Contracts.Authentication;
 using Bookings.Domain.Common.Errors;
@@ -6,6 +7,7 @@ using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Bookings.Api.Controllers
 {
@@ -47,6 +49,24 @@ namespace Bookings.Api.Controllers
             return result.Match(
                token => Ok(token),
                errors => Problem(errors));
+        }
+
+        [HttpPost("change-password")]
+        [Authorize]
+        public async Task<IActionResult> UpdatePassword(UpdatePasswordRequest request)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrWhiteSpace(userId))
+                return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "Identyfikator użytownika jest nieprawidłowy.");
+
+            var command = _mapper.Map<UpdatePasswordCommand>((request, userId));
+
+            var result = await _mediator.Send(command);
+
+            return result.Match(
+                r => Ok(),
+                errors => Problem(errors));
         }
     }
 }

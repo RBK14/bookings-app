@@ -108,7 +108,7 @@ namespace Bookings.Domain.UserAggregate
             return this;
         }
 
-        public User UpdatePassword(string password)
+        public User UpdatePasswordHash(string password)
         {
             if (string.IsNullOrWhiteSpace(password))
                 throw new DomainException("PasswordHash cannot be empty.");
