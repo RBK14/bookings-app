@@ -1,6 +1,7 @@
 ﻿using Bookings.Domain.AppointmentAggregate.ValueObjects;
 using Bookings.Domain.Common.Exceptions;
 using Bookings.Domain.Common.Models;
+using Bookings.Domain.EmployeeAggregate.Events;
 using Bookings.Domain.EmployeeAggregate.ValueObjects;
 using Bookings.Domain.OfferAggregate.ValueObjects;
 using Bookings.Domain.UserAggregate.ValueObjects;
@@ -31,11 +32,15 @@ namespace Bookings.Domain.EmployeeAggregate
 
         public static Employee Create(UserId userId)
         {
-            return new Employee(
+            var employee = new Employee(
                 EmployeeId.CrateUnique(),
                 userId,
                 DateTime.UtcNow,
                 DateTime.UtcNow);
+
+            employee.AddDomainEvent(new EmployeeCreatedEvent(employee));
+
+            return employee;
         }
 
         public Employee AddOfferId(OfferId offerId)

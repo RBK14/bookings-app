@@ -20,8 +20,8 @@ namespace Bookings.Application.Users.Events
 
         public async Task Handle(UserCreatedEvent notification, CancellationToken cancellationToken)
         {
-            var userId = notification.user.Id;
-            var userRole = notification.user.Role;
+            var userId = notification.User.Id;
+            var userRole = notification.User.Role;
 
             if (userRole == UserRole.Client)
             {

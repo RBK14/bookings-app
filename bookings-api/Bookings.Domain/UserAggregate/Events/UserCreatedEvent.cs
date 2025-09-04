@@ -2,5 +2,5 @@
 
 namespace Bookings.Domain.UserAggregate.Events
 {
-    public record UserCreatedEvent(User user) : IDomainEvent;
+    public record UserCreatedEvent(User User) : IDomainEvent;
 }
