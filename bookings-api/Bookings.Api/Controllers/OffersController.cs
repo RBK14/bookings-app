@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bookings.Api.Controllers
 {
-    [Route("offers")]
+    [Route("api/offers")]
     [Authorize]
     public class OffersController(ISender mediator, IMapper mapper) : ApiController
     {

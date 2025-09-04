@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace Bookings.Api.Controllers;
 
 [ApiController]
-[Authorize]
+//[Authorize]
+[AllowAnonymous]
 public class ApiController : ControllerBase
 {
     protected IActionResult Problem(List<Error> errors)
