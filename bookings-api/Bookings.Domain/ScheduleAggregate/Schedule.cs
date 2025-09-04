@@ -1,15 +1,13 @@
-﻿using Bookings.Domain.AppointmentAggregate;
-using Bookings.Domain.AppointmentAggregate.ValueObjects;
-using Bookings.Domain.CalendarAggregate.Entities;
-using Bookings.Domain.CalendarAggregate.ValueObjects;
+﻿using Bookings.Domain.AppointmentAggregate.ValueObjects;
 using Bookings.Domain.Common.Exceptions;
 using Bookings.Domain.Common.Models;
 using Bookings.Domain.EmployeeAggregate.ValueObjects;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Bookings.Domain.ScheduleAggregate.Entities;
+using Bookings.Domain.ScheduleAggregate.ValueObjects;
 
-namespace Bookings.Domain.CalendarAggregate
+namespace Bookings.Domain.ScheduleAggregate
 {
-    public class Calendar : AggregateRoot<CalendarId>
+    public sealed class Schedule : AggregateRoot<ScheduleId>
     {
         private readonly List<WorkDaySchedule> _defaultSchedules = new();
         private readonly List<WorkDayOverride> _overrides = new();
@@ -22,31 +20,26 @@ namespace Bookings.Domain.CalendarAggregate
         public DateTime CreatedAt { get; init; }
         public DateTime UpdatedAt { get; private set; }
 
-        private Calendar(
-            CalendarId calendarId,
+        private Schedule(
+            ScheduleId scheduleId,
             EmployeeId employeeId,
-            IEnumerable<WorkDaySchedule> defaultSchedules,
             DateTime createdAt,
-            DateTime updatedAt) : base(calendarId)
+            DateTime updatedAt) : base(scheduleId)
         {
             EmployeeId = employeeId;
-            _defaultSchedules = defaultSchedules.ToList();
             CreatedAt = createdAt;
             UpdatedAt = updatedAt;
         }
 
-        public static Calendar Create(
-            EmployeeId employeeId,
-            IEnumerable<WorkDaySchedule> defaultSchedules)
+        public static Schedule Create(EmployeeId employeeId)
         {
-            var calendar = new Calendar(
-                CalendarId.CreateUnique(),
+            var schedule = new Schedule(
+                ScheduleId.CreateUnique(),
                 employeeId,
-                defaultSchedules,
                 DateTime.UtcNow,
                 DateTime.UtcNow);
 
-            return calendar;
+            return schedule;
         }
 
         public void SetDefaultSchedules(IEnumerable<WorkDaySchedule> schedules)
@@ -86,7 +79,7 @@ namespace Bookings.Domain.CalendarAggregate
             return !overlaps;
         }
 
-        public void BoolSlot(AppointmentId appointmentId, DateTime start, DateTime end)
+        public void BookSlot(AppointmentId appointmentId, DateTime start, DateTime end)
         {
             if (!IsSlotAvailable(start, end))
                 throw new DomainException("Selected time is not available.");
@@ -109,5 +102,10 @@ namespace Bookings.Domain.CalendarAggregate
             return _defaultSchedules.FirstOrDefault(s => s.DayOfWeek == date.DayOfWeek);
         }
 
+#pragma warning disable CS8618
+        private Schedule()
+        {
+        }
+#pragma warning restore CS8618
     }
 }

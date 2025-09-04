@@ -1,13 +1,14 @@
 ﻿using Bookings.Domain.Common.Exceptions;
 using Bookings.Domain.Common.Models;
+using Bookings.Domain.ScheduleAggregate.ValueObjects;
 
-namespace Bookings.Domain.CalendarAggregate.Entities
+namespace Bookings.Domain.ScheduleAggregate.Entities
 {
-    public class WorkDayOverride : Entity<int>
+    public sealed class WorkDayOverride : Entity<WorkDayOverrideId>
     {
-        public DateOnly Date { get; private set; }
-        public TimeOnly Start { get; private set; }
-        public TimeOnly End { get; private set; }
+        public DateOnly Date { get; init; }
+        public TimeOnly Start { get; init; }
+        public TimeOnly End { get; init; }
 
         private WorkDayOverride(DateOnly date, TimeOnly start, TimeOnly end)
         {
@@ -25,7 +26,7 @@ namespace Bookings.Domain.CalendarAggregate.Entities
         }
 
 #pragma warning disable CS8618
-        protected WorkDayOverride()
+        private WorkDayOverride()
         {
         }
 #pragma warning restore CS8618

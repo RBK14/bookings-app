@@ -1,28 +1,28 @@
 ﻿using Bookings.Domain.Common.Exceptions;
 using Bookings.Domain.Common.Models;
 
-namespace Bookings.Domain.OfferAggregate.ValueObjects
+namespace Bookings.Domain.ScheduleAggregate.ValueObjects
 {
-    public sealed class OfferId : ValueObject
+    public sealed class WorkDayOverrideId : ValueObject
     {
         public Guid Value { get; init; }
 
-        private OfferId(Guid value)
+        private WorkDayOverrideId(Guid value)
         {
             Value = value;
         }
 
-        public static OfferId CreateUnique()
+        public static WorkDayOverrideId CreateUnique()
         {
-            return new OfferId(Guid.NewGuid());
+            return new WorkDayOverrideId(Guid.NewGuid());
         }
 
-        public static OfferId Create(Guid value)
-        {
-            return new OfferId(value);
+        public static WorkDayOverrideId Create(Guid value)
+        {   
+            return new WorkDayOverrideId(value);
         }
 
-        public static OfferId Create(string value)
+        public static WorkDayOverrideId Create(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new DomainException("Id cannot be empty.");
@@ -30,16 +30,15 @@ namespace Bookings.Domain.OfferAggregate.ValueObjects
             if (!Guid.TryParse(value, out var parsed))
                 throw new DomainException("Invalid Id format.");
 
-            return new OfferId(parsed);
+            return new WorkDayOverrideId(parsed);
         }
-
         public override IEnumerable<object> GetEqualityComponents()
         {
             yield return Value;
         }
 
 #pragma warning disable CS8618
-        private OfferId()
+        private WorkDayOverrideId()
         {
         }
 #pragma warning restore CS8618

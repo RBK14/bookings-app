@@ -1,13 +1,14 @@
 ﻿using Bookings.Domain.Common.Exceptions;
 using Bookings.Domain.Common.Models;
+using Bookings.Domain.ScheduleAggregate.ValueObjects;
 
-namespace Bookings.Domain.CalendarAggregate.Entities
+namespace Bookings.Domain.ScheduleAggregate.Entities
 {
-    public class WorkDaySchedule : Entity<int>
+    public class WorkDaySchedule : Entity<WorkDayScheduleId>
     {
-        public DayOfWeek DayOfWeek { get; private set; }
-        public TimeOnly Start { get; private set; }
-        public TimeOnly End { get; private set; }
+        public DayOfWeek DayOfWeek { get; init; }
+        public TimeOnly Start {  get; init; }
+        public TimeOnly End { get; init; }
 
         private WorkDaySchedule(DayOfWeek dayOfWeek, TimeOnly start, TimeOnly end)
         {

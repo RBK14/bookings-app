@@ -1,14 +1,15 @@
 ﻿using Bookings.Domain.AppointmentAggregate.ValueObjects;
 using Bookings.Domain.Common.Exceptions;
 using Bookings.Domain.Common.Models;
+using Bookings.Domain.ScheduleAggregate.ValueObjects;
 
-namespace Bookings.Domain.CalendarAggregate.Entities
+namespace Bookings.Domain.ScheduleAggregate.Entities
 {
-    public class WorkSlot : Entity<int>
+    public sealed class WorkSlot : Entity<WorkSlotId>
     {
-        public AppointmentId AppointmentId { get; private set; }
-        public DateTime Start { get; private set; }
-        public DateTime End { get; private set; }
+        public AppointmentId AppointmentId { get; init; }
+        public DateTime Start { get; init; }
+        public DateTime End { get; init; }
 
         private WorkSlot(AppointmentId appointmentId, DateTime start, DateTime end)
         {
@@ -24,5 +25,11 @@ namespace Bookings.Domain.CalendarAggregate.Entities
 
             return new WorkSlot(appointmentId, start, end);
         }
+
+#pragma warning disable CS8618
+        private WorkSlot()
+        {
+        }
+#pragma warning restore CS8618
     }
 }

@@ -1,51 +1,46 @@
-﻿using Bookings.Domain.AppointmentAggregate.ValueObjects;
-using Bookings.Domain.Common.Exceptions;
+﻿using Bookings.Domain.Common.Exceptions;
 using Bookings.Domain.Common.Models;
 
-namespace Bookings.Domain.CalendarAggregate.ValueObjects
+namespace Bookings.Domain.ScheduleAggregate.ValueObjects
 {
-    public sealed class CalendarId : ValueObject
+    public sealed class ScheduleId : ValueObject
     {
         public Guid Value { get; init; }
 
-        private CalendarId(Guid value)
+        private ScheduleId(Guid value)
         {
             Value = value;
         }
 
-        public static CalendarId CreateUnique()
+        public static ScheduleId CreateUnique()
         {
-            return new CalendarId(Guid.NewGuid());
+            return new ScheduleId(Guid.NewGuid());
         }
 
-        public static CalendarId Create(Guid value)
-        {
-            return new CalendarId(value);
+        public static ScheduleId Create(Guid value)
+        {   
+            return new ScheduleId(value);
         }
 
-        public static CalendarId Create(string value)
+        public static ScheduleId Create(string value)
         {
-
             if (string.IsNullOrWhiteSpace(value))
                 throw new DomainException("Id cannot be empty.");
 
             if (!Guid.TryParse(value, out var parsed))
                 throw new DomainException("Invalid Id format.");
 
-            return new CalendarId(parsed);
+            return new ScheduleId(parsed);
         }
-
         public override IEnumerable<object> GetEqualityComponents()
         {
             yield return Value;
         }
 
 #pragma warning disable CS8618
-        private CalendarId()
+        private ScheduleId()
         {
         }
-
-        
 #pragma warning restore CS8618
     }
 }
