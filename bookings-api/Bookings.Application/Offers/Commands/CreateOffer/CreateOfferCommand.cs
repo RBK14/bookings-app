@@ -10,6 +10,6 @@ namespace Bookings.Application.Offers.Commands.CreateOffer
         string Description,
         decimal Amount,
         int Currency,
-        string Duration): IRequest<ErrorOr<Offer>>;
+        TimeSpan Duration): IRequest<ErrorOr<Offer>>;
 
 }

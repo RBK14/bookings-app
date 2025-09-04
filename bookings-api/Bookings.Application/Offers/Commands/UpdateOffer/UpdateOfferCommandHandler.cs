@@ -1,7 +1,6 @@
 ﻿using Bookings.Application.Common.Interfaces.Persistence;
 using Bookings.Domain.Common.Enums;
 using Bookings.Domain.Common.Errors;
-using Bookings.Domain.Common.ValueObjects;
 using Bookings.Domain.EmployeeAggregate.ValueObjects;
 using Bookings.Domain.OfferAggregate;
 using Bookings.Domain.OfferAggregate.ValueObjects;
@@ -29,12 +28,11 @@ namespace Bookings.Application.Offers.Commands.UpdateOffer
                 return Errors.User.NoPermissions;
 
             var currency = CurrencyExtensions.FromCode(command.Currency);
-            var duration = Duration.Parse(command.Duration);
 
             offer.UpdateName(command.Name);
             offer.UpdateDescription(command.Description);
             offer.UpdatePrice(command.Amount, currency);
-            offer.UpdateDuration(duration);
+            offer.UpdateDuration(command.Duration);
 
             await _offerRepository.UpdateAsync(offer);
 

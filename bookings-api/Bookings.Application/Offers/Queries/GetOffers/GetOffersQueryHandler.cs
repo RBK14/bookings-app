@@ -35,12 +35,12 @@ namespace Bookings.Application.Offers.Queries.SearchOffers
                 ? Price.Create(query.MaxPrice.Value, currency)
                 : null;
 
-            var minDuration = !string.IsNullOrWhiteSpace(query.MinDuration)
-                ? Duration.Create(query.MinDuration)
+            var minDuration = query.MinDuration.HasValue
+                ? Duration.Create(query.MinDuration.Value)
                 : null;
 
-            var maxDuration = !string.IsNullOrWhiteSpace(query.MaxDuration)
-                ? Duration.Create(query.MaxDuration)
+            var maxDuration = query.MaxDuration.HasValue
+                ? Duration.Create(query.MaxDuration.Value)
                 : null;
 
             var filters = new List<IFilterable<Offer>>

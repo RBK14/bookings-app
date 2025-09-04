@@ -25,8 +25,8 @@ namespace Bookings.Api.Controllers
             [FromQuery] decimal? minPrice,
             [FromQuery] decimal? maxPrice,
             [FromQuery] int? currency,
-            [FromQuery] string? minDuration,
-            [FromQuery] string? maxDuration,
+            [FromQuery] TimeSpan? minDuration,
+            [FromQuery] TimeSpan? maxDuration,
             [FromQuery] string? sortBy)
         {
             var query = new GetOffersQuery(

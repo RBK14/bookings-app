@@ -12,5 +12,5 @@ namespace Bookings.Application.Offers.Commands.UpdateOffer
         string Description,
         decimal Amount,
         int Currency,
-        string Duration) : IRequest<ErrorOr<Offer>>;
+        TimeSpan Duration) : IRequest<ErrorOr<Offer>>;
 }

@@ -29,7 +29,6 @@ namespace Bookings.Application.Offers.Commands.UpdateOffer
 
             RuleFor(x => x.Duration)
                 .NotEmpty().WithMessage("Czas trwania jest wymagany.")
-                .Must(BeValidDuration).WithMessage("Czas trwania musi być w formacie hh:mm lub hh:mm:ss.")
                 .Must(BeInValidRange).WithMessage("Czas trwania musi być między 15 minut a 8 godzin.");
         }
 
@@ -38,17 +37,9 @@ namespace Bookings.Application.Offers.Commands.UpdateOffer
             return CurrencyExtensions.IsCorrectCurrencyCode(currency);
         }
 
-        private static bool BeValidDuration(string duration)
+        private static bool BeInValidRange(TimeSpan duration)
         {
-            return TimeSpan.TryParse(duration, out _);
-        }
-
-        private static bool BeInValidRange(string duration)
-        {
-            if (!TimeSpan.TryParse(duration, out var parsed))
-                return false;
-
-            return parsed.TotalMinutes >= 15 && parsed.TotalHours <= 8;
+            return duration.TotalMinutes >= 15 && duration.TotalHours <= 8;
         }
     }
 }

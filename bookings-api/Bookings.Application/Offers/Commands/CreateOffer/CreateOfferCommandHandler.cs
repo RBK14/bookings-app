@@ -21,7 +21,6 @@ namespace Bookings.Application.Offers.Commands.CreateOffer
         {
             var employeeId = EmployeeId.Create(command.EmployeeId);
             var currency = CurrencyExtensions.FromCode(command.Currency);
-            var duration = Duration.Parse(command.Duration);
 
             var offer = Offer.Create(
                 command.Name,
@@ -29,7 +28,7 @@ namespace Bookings.Application.Offers.Commands.CreateOffer
                 employeeId,
                 command.Amount,
                 currency,
-                duration);
+                command.Duration);
 
             await _offerRepository.AddAsync(offer);
 

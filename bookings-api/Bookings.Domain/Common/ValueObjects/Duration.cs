@@ -23,22 +23,6 @@ namespace Bookings.Domain.Common.ValueObjects
             return new Duration(value);
         }
 
-        public static Duration Create(string value)
-        {
-            return Create(Parse(value));
-        }
-
-        public static TimeSpan Parse(string duration)
-        {
-            if (string.IsNullOrWhiteSpace(duration))
-                throw new DomainException("Czas trwania nie może być pusty.");
-
-            if (!TimeSpan.TryParse(duration, out var parsed))
-                throw new DomainException("Nieprawidłowy format czasu.");
-
-            return parsed;
-        }
-
         public override IEnumerable<object> GetEqualityComponents()
         {
             yield return Value;

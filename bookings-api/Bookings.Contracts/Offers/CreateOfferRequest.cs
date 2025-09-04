@@ -5,5 +5,5 @@
         string Description,
         decimal Amount,
         int Currency,
-        string Duration);
+        TimeSpan Duration);
 }

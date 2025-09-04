@@ -6,7 +6,7 @@
         string OfferName,
         decimal OfferAmount,
         int OfferCurrency,
-        string OfferDuration,
+        TimeSpan OfferDuration,
         string EmployeeId,
         string ClientId,
         DateTime StartTime,

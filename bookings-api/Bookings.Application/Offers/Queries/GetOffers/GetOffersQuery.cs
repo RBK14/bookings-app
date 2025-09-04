@@ -9,8 +9,8 @@ namespace Bookings.Application.Offers.Queries.SearchOffers
         decimal? MinPrice,
         decimal? MaxPrice,
         int? Currency,
-        string? MinDuration,
-        string? MaxDuration,
+        TimeSpan? MinDuration,
+        TimeSpan? MaxDuration,
         string? SortBy) : IRequest<IEnumerable<Offer>>;
 
 }
