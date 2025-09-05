@@ -40,7 +40,7 @@ namespace Bookings.Infrastructure.Persistence.Repositories
         public async Task UpdateAsync(Client client)
         {
             _dbContext.Clients.Update(client);
-            await _dbContext.SaveChangesAsync();
+            //await _dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Client client)

@@ -11,7 +11,11 @@ namespace Bookings.Domain.ScheduleAggregate.Entities
         public DateTime Start { get; init; }
         public DateTime End { get; init; }
 
-        private WorkSlot(AppointmentId appointmentId, DateTime start, DateTime end)
+        private WorkSlot(
+            WorkSlotId workSlotId,
+            AppointmentId appointmentId,
+            DateTime start,
+            DateTime end) : base(workSlotId)
         {
             AppointmentId = appointmentId;
             Start = start;
@@ -23,7 +27,11 @@ namespace Bookings.Domain.ScheduleAggregate.Entities
             if (end <= start)
                 throw new DomainException("End must be after start.");
 
-            return new WorkSlot(appointmentId, start, end);
+            return new WorkSlot(
+                WorkSlotId.CreateUnique(),
+                appointmentId,
+                start,
+                end);
         }
 
 #pragma warning disable CS8618

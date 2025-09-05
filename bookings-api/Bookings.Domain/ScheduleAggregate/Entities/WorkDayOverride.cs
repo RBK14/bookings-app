@@ -10,7 +10,11 @@ namespace Bookings.Domain.ScheduleAggregate.Entities
         public TimeOnly Start { get; init; }
         public TimeOnly End { get; init; }
 
-        private WorkDayOverride(DateOnly date, TimeOnly start, TimeOnly end)
+        private WorkDayOverride(
+            WorkDayOverrideId workDayOverrideId,
+            DateOnly date,
+            TimeOnly start,
+            TimeOnly end) : base(workDayOverrideId)
         {
             Date = date;
             Start = start;
@@ -22,7 +26,11 @@ namespace Bookings.Domain.ScheduleAggregate.Entities
             if (end <= start)
                 throw new DomainException("End must be after start.");
 
-            return new WorkDayOverride(date, start, end);
+            return new WorkDayOverride(
+                workDayOverrideId: WorkDayOverrideId.CreateUnique(),
+                date: date,
+                start: start,
+                end: end);
         }
 
 #pragma warning disable CS8618

@@ -49,7 +49,7 @@ namespace Bookings.Infrastructure.Persistence.Repositories
         public async Task UpdateAsync(Offer offer)
         {
             _dbContext.Offers.Update(offer);
-            await _dbContext.SaveChangesAsync();
+            //await _dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Offer offer)

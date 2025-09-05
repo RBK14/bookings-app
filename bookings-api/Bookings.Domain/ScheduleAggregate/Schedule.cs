@@ -49,10 +49,10 @@ namespace Bookings.Domain.ScheduleAggregate
             UpdatedAt = DateTime.UtcNow;
         }
 
-        public void OverrideDay(DateOnly date, TimeOnly start, TimeOnly end)
+        public void SetScheduleOverride(WorkDayOverride scheduleOverride)
         {
-            _overrides.RemoveAll(o => o.Date == date);
-            _overrides.Add(WorkDayOverride.Create(date, start, end));
+            _overrides.RemoveAll(o => o.Date == scheduleOverride.Date);
+            _overrides.Add(scheduleOverride);
             UpdatedAt = DateTime.UtcNow;
         }
 
@@ -79,7 +79,7 @@ namespace Bookings.Domain.ScheduleAggregate
             return !overlaps;
         }
 
-        public void BookSlot(AppointmentId appointmentId, DateTime start, DateTime end)
+        public void BookAppointmentSlot(AppointmentId appointmentId, DateTime start, DateTime end)
         {
             if (!IsSlotAvailable(start, end))
                 throw new DomainException("Selected time is not available.");

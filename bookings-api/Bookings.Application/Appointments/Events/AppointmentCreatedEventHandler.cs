@@ -3,6 +3,7 @@ using Bookings.Domain.AppointmentAggregate.Events;
 using Bookings.Domain.ClientAggregate;
 using Bookings.Domain.EmployeeAggregate;
 using Bookings.Domain.OfferAggregate;
+using Bookings.Domain.ScheduleAggregate;
 using MediatR;
 
 namespace Bookings.Application.Appointments.Events
@@ -10,11 +11,13 @@ namespace Bookings.Application.Appointments.Events
     public class AppointmentCreatedEventHandler(
         IOfferRepository offerRepository,
         IClientRepository clientRepository,
-        IEmployeeRepository employeeRepository) : INotificationHandler<AppointmentCreatedEvent>
+        IEmployeeRepository employeeRepository,
+        IScheduleRepository scheduleRepository) : INotificationHandler<AppointmentCreatedEvent>
     {
         private readonly IOfferRepository _offerRepository = offerRepository;
         private readonly IEmployeeRepository _employeeRepository = employeeRepository;
         private readonly IClientRepository _clientRepository = clientRepository;
+        private readonly IScheduleRepository _scheduleRepository = scheduleRepository;
 
         public async Task Handle(AppointmentCreatedEvent notification, CancellationToken cancellationToken)
         {
@@ -29,6 +32,9 @@ namespace Bookings.Application.Appointments.Events
             if (await _clientRepository.GetByIdAsync(appointment.ClientId) is not Client client)
                 throw new Exception($"No client with ClientId: {appointment.ClientId}.");
 
+            if (await _scheduleRepository.GetByEmployeeIdAsync(appointment.EmployeeId) is not Schedule schedule)
+                throw new Exception("$No client with ClientId: {appointment.ClientId}.");
+
             offer.AddAppointmentId(appointment.Id);
             await _offerRepository.UpdateAsync(offer);
 
@@ -37,6 +43,9 @@ namespace Bookings.Application.Appointments.Events
 
             client.AddAppointmentId(appointment.Id);
             await _clientRepository.UpdateAsync(client);
+
+            schedule.BookAppointmentSlot(appointment.Id, appointment.Time.Start, appointment.Time.End);
+            await _scheduleRepository.UpdateAsync(schedule);
         }
     }
 }

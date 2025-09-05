@@ -43,7 +43,7 @@ namespace Bookings.Infrastructure.Persistence.Repositories
         public async Task UpdateAsync(Employee employee)
         {
             _dbContext.Employees.Update(employee);
-            await _dbContext.SaveChangesAsync();
+            //await _dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Employee employee)

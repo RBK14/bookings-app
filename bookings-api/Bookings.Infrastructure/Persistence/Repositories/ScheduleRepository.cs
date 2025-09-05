@@ -37,7 +37,7 @@ namespace Bookings.Infrastructure.Persistence.Repositories
         public async Task UpdateAsync(Schedule schedule)
         {
             _dbContext.Schedules.Update(schedule);
-            await _dbContext.SaveChangesAsync();
+            //await _dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Schedule schedule)
