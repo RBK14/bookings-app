@@ -20,7 +20,7 @@ namespace Bookings.Application.Employees.Events
 
             var schedule = Schedule.Create(employeeId);
 
-            await _scheduleRepository.AddAsync(schedule);
+            _scheduleRepository.Update(schedule);
         }
     }
 }

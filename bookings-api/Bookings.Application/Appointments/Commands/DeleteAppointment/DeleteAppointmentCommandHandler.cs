@@ -17,7 +17,8 @@ namespace Bookings.Application.Appointments.Commands.DeleteAppointment
             if (await _appointmentsRepository.GetByIdAsync(appointmentId) is not Appointment appointment)
                 return Errors.Appointment.NotFound;
 
-            await _appointmentsRepository.DeleteAsync(appointment);
+            _appointmentsRepository.Update(appointment);
+            await _appointmentsRepository.SaveChangesAsync();
 
             return Unit.Value;
         }

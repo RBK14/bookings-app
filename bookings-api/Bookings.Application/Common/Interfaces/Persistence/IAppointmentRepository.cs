@@ -3,13 +3,13 @@ using Bookings.Domain.AppointmentAggregate.ValueObjects;
 
 namespace Bookings.Application.Common.Interfaces.Persistence
 {
-    public interface IAppointmentRepository
+    public interface IAppointmentRepository : IBaseRepository
     {
-        Task AddAsync(Appointment appointment);
+        void Add(Appointment appointment);
         Task<Appointment?> GetByIdAsync(AppointmentId appointmentId);
         Task<IEnumerable<Appointment>> SearchAsync(IEnumerable<IFilterable<Appointment>>? filters, ISortable<Appointment>? sort);
-        Task UpdateAsync(Appointment appointment);
-        Task DeleteAsync(Appointment appointment);
+        void Update(Appointment appointment);
+        void Delete(Appointment appointment);
     }
 
 }

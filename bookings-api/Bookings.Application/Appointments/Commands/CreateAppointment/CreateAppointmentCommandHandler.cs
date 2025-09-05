@@ -35,7 +35,8 @@ namespace Bookings.Application.Offers.Commands.CreateOffer
                 clientId,
                 command.StartTime);
 
-            await _appointmentRepository.AddAsync(appointment);
+            _appointmentRepository.Add(appointment);
+            await _appointmentRepository.SaveChangesAsync();
 
             return appointment;
         }

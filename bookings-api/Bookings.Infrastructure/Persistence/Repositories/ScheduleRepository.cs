@@ -6,14 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bookings.Infrastructure.Persistence.Repositories
 {
-    public class ScheduleRepository(BookingsDbContext dbContext) : IScheduleRepository
+    public class ScheduleRepository(BookingsDbContext dbContext) : BaseRepository(dbContext), IScheduleRepository
     {
-        private readonly BookingsDbContext _dbContext = dbContext;
-
-        public async Task AddAsync(Schedule schedule)
+        public void Add(Schedule schedule)
         {
             _dbContext.Schedules.Add(schedule);
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<Schedule?> GetByIdAsync(ScheduleId scheduleId)
@@ -34,15 +31,18 @@ namespace Bookings.Infrastructure.Persistence.Repositories
                 .SingleOrDefaultAsync(s => s.EmployeeId == employeeId);
         }
 
-        public async Task UpdateAsync(Schedule schedule)
+        public void Update(Schedule schedule)
         {
             _dbContext.Schedules.Update(schedule);
-            //await _dbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(Schedule schedule)
+        public void Delete(Schedule schedule)
         {
             _dbContext.Schedules.Remove(schedule);
+        }
+
+        public async Task SaveChangesAsync()
+        {
             await _dbContext.SaveChangesAsync();
         }
     }

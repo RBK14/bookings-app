@@ -37,6 +37,7 @@ namespace Bookings.Infrastructure
                 options.UseSqlServer(configuration.GetConnectionString("SqlServer")));
 
             services.AddScoped<PublishDomainEventInterceptor>();
+            services.AddScoped<IBaseRepository, BaseRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IOfferRepository, OfferRepository>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();

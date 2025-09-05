@@ -17,7 +17,7 @@ namespace Bookings.Application.Offers.Events
                 throw new Exception($"No employee with EmployeeId: {offer.EmployeeId}."); // TODO: Ogarnąć lepszy error handling
 
             employee.AddOfferId(offer.Id);
-            await _employeeRepository.UpdateAsync(employee);
+            _employeeRepository.Update(employee);
         }
     }
 }

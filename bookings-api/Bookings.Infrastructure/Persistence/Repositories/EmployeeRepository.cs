@@ -6,14 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bookings.Infrastructure.Persistence.Repositories
 {
-    public class EmployeeRepository(BookingsDbContext dbContext) : IEmployeeRepository
+    public class EmployeeRepository(BookingsDbContext dbContext) : BaseRepository(dbContext), IEmployeeRepository
     {
-        private readonly BookingsDbContext _dbContext = dbContext;
-
-        public async Task AddAsync(Employee employee)
+        public void Add(Employee employee)
         {
             _dbContext.Employees.Add(employee);
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<Employee?> GetByIdAsync(EmployeeId employeeId)
@@ -29,7 +26,7 @@ namespace Bookings.Infrastructure.Persistence.Repositories
             return await _dbContext.Employees
                 .Include(e => e.OfferIds)
                 .Include(e => e.AppointmentIds)
-                .SingleOrDefaultAsync(x => x.UserId == userId);
+                .SingleOrDefaultAsync(e => e.UserId == userId);
         }
 
         public async Task<IEnumerable<Employee>> GetAllAsync()
@@ -40,15 +37,18 @@ namespace Bookings.Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task UpdateAsync(Employee employee)
+        public void Update(Employee employee)
         {
             _dbContext.Employees.Update(employee);
-            //await _dbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(Employee employee)
+        public void Delete(Employee employee)
         {
             _dbContext.Employees.Remove(employee);
+        }
+
+        public async Task SaveChangesAsync()
+        {
             await _dbContext.SaveChangesAsync();
         }
     }

@@ -36,16 +36,16 @@ namespace Bookings.Application.Appointments.Events
                 throw new Exception("$No client with ClientId: {appointment.ClientId}.");
 
             offer.AddAppointmentId(appointment.Id);
-            await _offerRepository.UpdateAsync(offer);
+            _offerRepository.Update(offer);
 
             employee.AddAppointmentId(appointment.Id);
-            await _employeeRepository.UpdateAsync(employee);
+            _employeeRepository.Update(employee);
 
             client.AddAppointmentId(appointment.Id);
-            await _clientRepository.UpdateAsync(client);
+            _clientRepository.Update(client);
 
             schedule.BookAppointmentSlot(appointment.Id, appointment.Time.Start, appointment.Time.End);
-            await _scheduleRepository.UpdateAsync(schedule);
+            _scheduleRepository.Update(schedule);
         }
     }
 }

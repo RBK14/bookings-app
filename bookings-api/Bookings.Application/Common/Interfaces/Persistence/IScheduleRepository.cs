@@ -4,12 +4,12 @@ using Bookings.Domain.ScheduleAggregate.ValueObjects;
 
 namespace Bookings.Application.Common.Interfaces.Persistence
 {
-    public interface IScheduleRepository
+    public interface IScheduleRepository : IBaseRepository
     {
-        Task AddAsync(Schedule schedule);
+        void Add(Schedule schedule);
         Task<Schedule?> GetByIdAsync(ScheduleId scheduleId);
         Task<Schedule?> GetByEmployeeIdAsync(EmployeeId employeeId);
-        Task UpdateAsync(Schedule schedule);
-        Task DeleteAsync(Schedule schedule);
+        void Update(Schedule schedule);
+        void Delete(Schedule schedule);
     }
 }

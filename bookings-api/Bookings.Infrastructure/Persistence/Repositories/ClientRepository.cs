@@ -6,14 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bookings.Infrastructure.Persistence.Repositories
 {
-    public class ClientRepository(BookingsDbContext dbContext) : IClientRepository
+    public class ClientRepository(BookingsDbContext dbContext) : BaseRepository(dbContext), IClientRepository
     {
-        private readonly BookingsDbContext _dbContext = dbContext;
-
-        public async Task AddAsync(Client client)
+        public void Add(Client client)
         {
             _dbContext.Clients.Add(client);
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<Client?> GetByIdAsync(ClientId clientId)
@@ -37,15 +34,18 @@ namespace Bookings.Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task UpdateAsync(Client client)
+        public void Update(Client client)
         {
             _dbContext.Clients.Update(client);
-            //await _dbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(Client client)
+        public void Delete(Client client)
         {
             _dbContext.Clients.Remove(client);
+        }
+
+        public async Task SaveChangesAsync()
+        {
             await _dbContext.SaveChangesAsync();
         }
     }

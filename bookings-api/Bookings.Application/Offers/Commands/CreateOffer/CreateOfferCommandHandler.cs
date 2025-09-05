@@ -30,7 +30,8 @@ namespace Bookings.Application.Offers.Commands.CreateOffer
                 currency,
                 command.Duration);
 
-            await _offerRepository.AddAsync(offer);
+            _offerRepository.Add(offer);
+            await _offerRepository.SaveChangesAsync();
 
             return offer;
         }

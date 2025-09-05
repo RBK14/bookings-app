@@ -27,7 +27,8 @@ namespace Bookings.Application.Authentication.Commands.UpdatePassword
             var newPasswordHash = BCrypt.Net.BCrypt.HashPassword(command.NewPassword);
             user.UpdatePasswordHash(newPasswordHash);
 
-            await _userRepository.UpdateAsync(user);
+            _userRepository.Update(user);
+            await _userRepository.SaveChangesAsync();
 
             return Unit.Value;
         }

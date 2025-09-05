@@ -23,7 +23,8 @@ namespace Bookings.Application.Users.Commands.UpdateUser
             user.UpdateEmail(command.Email);
             user.UpdatePhone(command.Phone);
 
-            await _userRepository.UpdateAsync(user);
+            _userRepository.Update(user);
+            await _userRepository.SaveChangesAsync();
 
             return user;
         }

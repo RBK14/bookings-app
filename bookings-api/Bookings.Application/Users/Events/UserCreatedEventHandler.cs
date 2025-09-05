@@ -7,18 +7,14 @@ using MediatR;
 
 namespace Bookings.Application.Users.Events
 {
-    public class UserCreatedEventHandler : INotificationHandler<UserCreatedEvent>
+    public class UserCreatedEventHandler(
+        IClientRepository clientRepository,
+        IEmployeeRepository employeeRepository) : INotificationHandler<UserCreatedEvent>
     {
-        private readonly IClientRepository _clientRepository;
-        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IClientRepository _clientRepository = clientRepository;
+        private readonly IEmployeeRepository _employeeRepository = employeeRepository;
 
-        public UserCreatedEventHandler(IClientRepository clientRepository, IEmployeeRepository employeeRepository)
-        {
-            _clientRepository = clientRepository;
-            _employeeRepository = employeeRepository;
-        }
-
-        public async Task Handle(UserCreatedEvent notification, CancellationToken cancellationToken)
+        public Task Handle(UserCreatedEvent notification, CancellationToken cancellationToken)
         {
             var userId = notification.User.Id;
             var userRole = notification.User.Role;
@@ -26,13 +22,15 @@ namespace Bookings.Application.Users.Events
             if (userRole == UserRole.Client)
             {
                 var client = Client.Create(userId);
-                await _clientRepository.AddAsync(client);
+                _clientRepository.Add(client);
             }
             else if (userRole == UserRole.Employee)
             {
                 var employee = Employee.Create(userId);
-                await _employeeRepository.AddAsync(employee);
+                _employeeRepository.Add(employee);
             }
+
+            return Task.CompletedTask;
         }
     }
 }

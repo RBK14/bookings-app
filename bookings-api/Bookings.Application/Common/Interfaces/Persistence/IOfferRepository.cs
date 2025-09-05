@@ -3,12 +3,12 @@ using Bookings.Domain.OfferAggregate.ValueObjects;
 
 namespace Bookings.Application.Common.Interfaces.Persistence
 {
-    public interface IOfferRepository
+    public interface IOfferRepository : IBaseRepository
     {
-        Task AddAsync(Offer offer);
+        void Add(Offer offer);
         Task<Offer?> GetByIdAsync(OfferId offerId);
         Task<IEnumerable<Offer>> SearchAsync(IEnumerable<IFilterable<Offer>>? filters, ISortable<Offer>? sort);
-        Task UpdateAsync(Offer offer);
-        Task DeleteAsync(Offer offer);
+        void Update(Offer offer);
+        void Delete(Offer offer);
     }
 }

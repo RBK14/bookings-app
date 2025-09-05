@@ -18,7 +18,8 @@ namespace Bookings.Application.Users.Commands.DeleteUser
             if (await _userRepository.GetByIdAsync(userId) is not User user)
                 return Errors.User.NotFound;
 
-            await _userRepository.DeleteAsync(user);
+            _userRepository.Delete(user);
+            await _userRepository.SaveChangesAsync();
 
             return Unit.Value;
         }

@@ -8,16 +8,13 @@ using Bookings.Domain.UserAggregate.ValueObjects;
 
 namespace Bookings.Application.Authentication.Commands.Register
 {
-    public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<Unit>>
+    public class RegisterCommandHandler(
+        IJwtTokenGenerator jwtTokenGenerator,
+        IUserRepository userRepository) : IRequestHandler<RegisterCommand, ErrorOr<Unit>>
     {
-        private readonly IJwtTokenGenerator _jwtTokenGenerator;
-        private readonly IUserRepository _userRepository;
+        private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
+        private readonly IUserRepository _userRepository = userRepository;
 
-        public RegisterCommandHandler(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository)
-        {
-            _jwtTokenGenerator = jwtTokenGenerator;
-            _userRepository = userRepository;
-        }
         public async Task<ErrorOr<Unit>> Handle(RegisterCommand command, CancellationToken cancellationToken)
         {
             var email = Email.Create(command.Email);
@@ -33,7 +30,8 @@ namespace Bookings.Application.Authentication.Commands.Register
                 passwordHash,
                 command.Phone);
 
-            await _userRepository.AddAsync(user);
+            _userRepository.Add(user);
+            await _userRepository.SaveChangesAsync();
 
             return Unit.Value;
         }

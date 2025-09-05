@@ -28,7 +28,8 @@ namespace Bookings.Application.Appointments.Commands.UpdateAppointment
 
             appointment.UpdateTime(command.StartTime, command.EndTime);
 
-            await _appointmentRepository.UpdateAsync(appointment);
+            _appointmentRepository.Update(appointment);
+            await _appointmentRepository.SaveChangesAsync();
 
             return appointment;
         }

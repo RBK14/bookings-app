@@ -4,13 +4,13 @@ using Bookings.Domain.UserAggregate.ValueObjects;
 
 namespace Bookings.Application.Common.Interfaces.Persistence
 {
-    public interface IEmployeeRepository
+    public interface IEmployeeRepository : IBaseRepository
     {
-        Task AddAsync(Employee employee);
+        void Add(Employee employee);
         Task<Employee?> GetByIdAsync(EmployeeId employeeId);
         Task<Employee?> GetByUserIdAsync(UserId userId);
         Task<IEnumerable<Employee>> GetAllAsync();
-        Task UpdateAsync(Employee employee);
-        Task DeleteAsync(Employee employee);
+        void Update(Employee employee);
+        void Delete(Employee employee);
     }
 }

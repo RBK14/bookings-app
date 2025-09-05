@@ -26,7 +26,8 @@ namespace Bookings.Application.Schedules.Commands.SetScheduleOverride
 
             schedule.SetScheduleOverride(scheduleOverride);
 
-            await _scheduleRepository.UpdateAsync(schedule);
+            _scheduleRepository.Update(schedule);
+            await _scheduleRepository.SaveChangesAsync();
 
             return Unit.Value;
         }

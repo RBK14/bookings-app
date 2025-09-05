@@ -5,14 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bookings.Infrastructure.Persistence.Repositories
 {
-    public class UserRepository(BookingsDbContext dbContext) : IUserRepository
+    public class UserRepository(BookingsDbContext dbContext) : BaseRepository(dbContext), IUserRepository
     {
-        private readonly BookingsDbContext _dbContext = dbContext;
-
-        public async Task AddAsync(User user)
+        public void Add(User user)
         {
             _dbContext.Users.Add(user);
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<User?> GetByIdAsync(UserId userId)
@@ -22,38 +19,44 @@ namespace Bookings.Infrastructure.Persistence.Repositories
 
         public async Task<User?> GetByEmailAsync(Email email)
         {
-            return await _dbContext.Users.SingleOrDefaultAsync(u => u.Email.Value == email.Value);
+            return await _dbContext.Users
+                .SingleOrDefaultAsync(u => u.Email.Value == email.Value);
         }
 
         public async Task<IEnumerable<User>> SearchAsync(
-            IEnumerable<IFilterable<User>> filters,
-            ISortable<User> sort)
+            IEnumerable<IFilterable<User>>? filters,
+            ISortable<User>? sort)
         {
-            var users = await _dbContext.Users.ToListAsync();
-
-            var usersQuery = users.AsQueryable();
+            var usersQuery = _dbContext.Users.AsQueryable();
 
             if (filters is not null)
+            {
                 foreach (var filter in filters)
                 {
                     usersQuery = filter.Apply(usersQuery);
                 }
+            }
 
             if (sort is not null)
+            {
                 usersQuery = sort.Apply(usersQuery);
+            }
 
-            return usersQuery;
+            return await usersQuery.ToListAsync();
         }
 
-        public async Task UpdateAsync(User user)
+        public void Update(User user)
         {
             _dbContext.Users.Update(user);
-            await _dbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(User user)
+        public void Delete(User user)
         {
             _dbContext.Users.Remove(user);
+        }
+
+        public async Task SaveChangesAsync()
+        {
             await _dbContext.SaveChangesAsync();
         }
     }
