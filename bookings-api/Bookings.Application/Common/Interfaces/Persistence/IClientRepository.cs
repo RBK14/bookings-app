@@ -10,6 +10,7 @@ namespace Bookings.Application.Common.Interfaces.Persistence
         Task<Client?> GetByIdAsync(ClientId clientId);
         Task<Client?> GetByUserIdAsync(UserId userId);
         Task<IEnumerable<Client>> GetAllAsync();
+        Task<IEnumerable<Client>> GetByIdsAsync(IEnumerable<ClientId> clientIds);
         void Update(Client client);
         void Delete(Client client);
     }

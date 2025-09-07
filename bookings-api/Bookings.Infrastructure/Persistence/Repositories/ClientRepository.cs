@@ -34,6 +34,14 @@ namespace Bookings.Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Client>> GetByIdsAsync(IEnumerable<ClientId> clientIds)
+        {
+            return await _dbContext.Clients
+                .Include(c => c.AppointmentIds)
+                .Where(c => clientIds.Contains(c.Id))
+                .ToListAsync();
+        }
+
         public void Update(Client client)
         {
             _dbContext.Clients.Update(client);

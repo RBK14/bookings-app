@@ -51,7 +51,7 @@ namespace Bookings.Domain.UserAggregate
             string email,
             string passwordHash,
             string phone,
-            UserRole role = UserRole.Client)
+            UserRole role = UserRole.Employee)
         {
             if (string.IsNullOrWhiteSpace(firstName))
                 throw new DomainException("FirstName cannot be empty.");

@@ -45,6 +45,13 @@ namespace Bookings.Infrastructure.Persistence.Repositories
             return await usersQuery.ToListAsync();
         }
 
+        public async Task<IEnumerable<User>> GetByIdsAsync(IEnumerable<UserId> userIds)
+        {
+            return await _dbContext.Users
+                .Where(u => userIds.Contains(u.Id))
+                .ToListAsync();
+        }
+
         public void Update(User user)
         {
             _dbContext.Users.Update(user);

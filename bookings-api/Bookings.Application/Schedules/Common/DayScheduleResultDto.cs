@@ -10,6 +10,6 @@
         string AppointmentId,
         TimeOnly Start,
         TimeOnly End,
-        string ClientName,
-        string OfferName);
+        string OfferName,
+        string ClientName);
 }

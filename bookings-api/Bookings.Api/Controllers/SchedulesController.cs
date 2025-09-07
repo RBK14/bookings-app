@@ -1,7 +1,10 @@
 ﻿using Bookings.Application.Schedules.Commands.SetDefaultSchedule;
 using Bookings.Application.Schedules.Commands.SetScheduleOverride;
+using Bookings.Application.Schedules.Queries.GetFreeSlots;
+using Bookings.Application.Schedules.Queries.GetSchedule;
 using Bookings.Application.Schedules.Queries.GetWorkHours;
 using Bookings.Contracts.Schedule;
+using Bookings.Domain.EmployeeAggregate;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -15,6 +18,47 @@ namespace Bookings.Api.Controllers
     {
         private readonly ISender _mediator = mediator;
         private readonly IMapper _mapper = mapper;
+
+        [HttpGet]
+        public async Task<IActionResult> GetSchedule(
+            [FromQuery] string employeeId,
+            [FromQuery] int? days,
+            [FromQuery] DateOnly? from,
+            [FromQuery] DateOnly? to)
+        {
+            var query = new GetScheduleQuery(employeeId, days, from, to);
+
+            var result = await _mediator.Send(query);
+
+            return result.Match(
+                schedule =>
+                {
+                    var response = schedule.Select(s => _mapper.Map<DayScheduleResponse>(s)).ToList();
+                    return Ok(response);
+                },
+                errors => Problem(errors)
+            );
+        }
+
+        [HttpGet("{offerId}")]
+        public async Task<IActionResult> GetFreeSlots(
+            string offerId,
+            [FromQuery] DateOnly? from,
+            [FromQuery] int days = 14)
+        {
+            var query = new GetFreeSlotsQuery(offerId, from, days);
+
+            var result = await _mediator.Send(query);
+
+            return result.Match(
+                freeSlots =>
+                {
+                    var response = freeSlots.Select(fs => _mapper.Map<DayFreeSlotsResponse>(fs)).ToList();
+                    return Ok(response);
+                },
+                errors => Problem(errors)
+            );
+        }
 
         [HttpPost("default")]
         [Authorize(Roles = "Employee")]

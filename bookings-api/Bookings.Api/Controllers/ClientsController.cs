@@ -1,8 +1,6 @@
 ﻿using Bookings.Application.Clients.Queries.GetClient;
 using Bookings.Application.Clients.Queries.GetClients;
-using Bookings.Application.Employees.Queries;
 using Bookings.Contracts.Clients;
-using Bookings.Contracts.Employees;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

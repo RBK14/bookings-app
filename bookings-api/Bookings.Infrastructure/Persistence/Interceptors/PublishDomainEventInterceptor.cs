@@ -5,14 +5,9 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Bookings.Infrastructure.Persistence.Interceptors
 {
-    public class PublishDomainEventInterceptor : SaveChangesInterceptor
+    public class PublishDomainEventInterceptor(IPublisher mediator) : SaveChangesInterceptor
     {
-        private readonly IPublisher _mediator;
-
-        public PublishDomainEventInterceptor(IPublisher mediator)
-        {
-            _mediator = mediator;
-        }
+        private readonly IPublisher _mediator = mediator;
 
         public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
         {

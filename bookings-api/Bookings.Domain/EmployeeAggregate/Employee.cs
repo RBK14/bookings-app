@@ -38,7 +38,7 @@ namespace Bookings.Domain.EmployeeAggregate
                 DateTime.UtcNow,
                 DateTime.UtcNow);
 
-            employee.AddDomainEvent(new EmployeeCreatedEvent(employee));
+            //employee.AddDomainEvent(new EmployeeCreatedEvent(employee));
 
             return employee;
         }

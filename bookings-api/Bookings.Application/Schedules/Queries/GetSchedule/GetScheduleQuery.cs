@@ -8,5 +8,5 @@ namespace Bookings.Application.Schedules.Queries.GetSchedule
         string EmployeeId,
         int? Days = null,
         DateOnly? From = null,
-        DateOnly? To = null) : IRequest<ErrorOr<IEnumerable<WorkHoursResultDto>>>;
+        DateOnly? To = null) : IRequest<ErrorOr<IEnumerable<DayScheduleResultDto>>>;
 }
