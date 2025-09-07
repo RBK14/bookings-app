@@ -8,7 +8,7 @@ using Bookings.Application.Common.Interfaces.Authentication;
 using Bookings.Domain.UserAggregate.Enums;
 using Bookings.Domain.ClientAggregate;
 using Bookings.Domain.EmployeeAggregate;
-using Bookings.Domain.UserAggregate.ValueObjects;
+using Bookings.Domain.Common.ValueObjects;
 
 namespace Bookings.Application.Authentication.Queries.Login
 {

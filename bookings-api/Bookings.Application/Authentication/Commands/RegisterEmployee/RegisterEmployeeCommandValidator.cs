@@ -1,11 +1,14 @@
 ﻿using FluentValidation;
 
-namespace Bookings.Application.Authentication.Commands.Register
+namespace Bookings.Application.Authentication.Commands.RegisterEmployee
 {
-    public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
+    public class RegisterEmployeeCommandValidator : AbstractValidator<RegisterEmployeeCommand>
     {
-        public RegisterCommandValidator()
+        public RegisterEmployeeCommandValidator()
         {
+            RuleFor(x => x.TokenId)
+                .NotEmpty().WithMessage("Token jest wymagany.");
+
             RuleFor(x => x.FirstName)
                  .NotEmpty().WithMessage("Imię jest wymagane.")
                  .MaximumLength(100).WithMessage("Imię nie może być dłuższe niż 100 znaków.");
@@ -26,6 +29,10 @@ namespace Bookings.Application.Authentication.Commands.Register
                 .Matches("[a-z]").WithMessage("Hasło musi zawierać co najmniej jedną małą literę.")
                 .Matches("[0-9]").WithMessage("Hasło musi zawierać co najmniej jedną cyfrę.")
                 .Matches("[^a-zA-Z0-9]").WithMessage("Hasło musi zawierać znak specjalny.");
+
+            RuleFor(x => x.ConfirmPassword)
+                .Matches(x => x.Password).WithMessage("Potwierdzenie hasła musi być identyczne z hasłem.")
+                .NotEmpty().WithMessage("Potwierdzenie nowego hasła jest wymagane.");
 
             RuleFor(x => x.Phone)
                 .NotEmpty().WithMessage("Numer telefonu jest wymagany.")

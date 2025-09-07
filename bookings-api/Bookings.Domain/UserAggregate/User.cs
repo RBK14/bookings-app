@@ -4,19 +4,22 @@ using Bookings.Domain.Common.ValueObjects;
 using Bookings.Domain.UserAggregate.Enums;
 using Bookings.Domain.UserAggregate.Events;
 using Bookings.Domain.UserAggregate.ValueObjects;
+using Bookings.Domain.VerificationTokenAggregate.ValueObjects;
 
 namespace Bookings.Domain.UserAggregate
 {
     public class User : AggregateRoot<UserId>
     {
+        private readonly List<VerificationTokenId> _verificationTokenIds = new();
+
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
         public Email Email { get; private set; }
         public string PasswordHash { get; private set; }
         public Phone Phone { get; private set; }
         public UserRole Role { get; init; }
-        public bool IsEmailConfirmed { get; private set; }
-        public string? ConfirmationCode { get; private set; }
+        public bool IsEmailVerified { get; private set; }
+        public IReadOnlyList<VerificationTokenId> VerificationTokenIds => _verificationTokenIds.AsReadOnly();
         public DateTime CreatedAt { get; init; }
         public DateTime UpdatedAt { get; private set; }
 
@@ -28,8 +31,7 @@ namespace Bookings.Domain.UserAggregate
             string passwordHash,
             Phone phone,
             UserRole role,
-            bool isEmailConfirmed,
-            string? confirmationCode,
+            bool isEmailVerified,
             DateTime createdAt,
             DateTime updatedAt) : base(userId)
         {
@@ -39,8 +41,7 @@ namespace Bookings.Domain.UserAggregate
             PasswordHash = passwordHash;
             Phone = phone;
             Role = role;
-            IsEmailConfirmed = isEmailConfirmed;
-            ConfirmationCode = confirmationCode;
+            IsEmailVerified = isEmailVerified;
             CreatedAt = createdAt;
             UpdatedAt = updatedAt;
         }
@@ -51,7 +52,8 @@ namespace Bookings.Domain.UserAggregate
             string email,
             string passwordHash,
             string phone,
-            UserRole role = UserRole.Employee)
+            UserRole role = UserRole.Client,
+            bool isEmailVerified = false)
         {
             if (string.IsNullOrWhiteSpace(firstName))
                 throw new DomainException("FirstName cannot be empty.");
@@ -70,13 +72,15 @@ namespace Bookings.Domain.UserAggregate
                 passwordHash,
                 Phone.Create(phone),
                 role,
-                false,
-                null,
+                isEmailVerified,
                 DateTime.UtcNow,
                 DateTime.UtcNow);
 
-            if (role == UserRole.Client || role == UserRole.Employee)
-                user.AddDomainEvent(new UserCreatedEvent(user));
+            if (role == UserRole.Client)
+                user.AddDomainEvent(new ClientCreatedEvent(user));
+
+            if (role == UserRole.Employee)
+                user.AddDomainEvent(new EmployeeCreatedEvent(user));
 
             return user;
         }
@@ -125,9 +129,21 @@ namespace Bookings.Domain.UserAggregate
             return this;
         }
 
-        public User ConfirmEmail()
+        public void AddVerificationTokenId(VerificationTokenId tokenId)
         {
-            IsEmailConfirmed = true;
+            if (!_verificationTokenIds.Contains(tokenId))
+            {
+                _verificationTokenIds.Add(tokenId);
+                UpdatedAt = DateTime.UtcNow;
+            }
+        }
+
+        public User VerifyEmail(VerificationTokenId tokenId)
+        {
+            if (!_verificationTokenIds.Contains(tokenId))
+                throw new DomainException("Invalid verification token.");
+
+            IsEmailVerified = true;
             UpdatedAt = DateTime.UtcNow;
             return this;
         }

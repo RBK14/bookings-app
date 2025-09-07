@@ -23,8 +23,9 @@ namespace Bookings.Application.Appointments.Events
         {
             var appointment = notification.Appointment;
 
+            // TODO: Improve error handling
             if (await _offerRepository.GetByIdAsync(appointment.OfferId) is not Offer offer)
-                throw new Exception($"No offer with OfferId: {appointment.OfferId}."); // TODO: Ogarnąć lepszy error handling
+                throw new Exception($"No offer with OfferId: {appointment.OfferId}.");
 
             if (await _employeeRepository.GetByIdAsync(appointment.EmployeeId) is not Employee employee)
                 throw new Exception($"No employee with EmployeeId: {appointment.EmployeeId}.");

@@ -44,6 +44,7 @@ namespace Bookings.Infrastructure
             services.AddScoped<IClientRepository, ClientRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<IScheduleRepository, ScheduleRepository>();
+            services.AddScoped<IVerificationTokenRepository, VerificationTokenRepository>();
 
             return services;
         }

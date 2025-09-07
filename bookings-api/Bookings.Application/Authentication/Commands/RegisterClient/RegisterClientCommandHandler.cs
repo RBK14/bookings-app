@@ -1,21 +1,17 @@
 ﻿using Bookings.Application.Common.Interfaces.Persistence;
 using Bookings.Domain.Common.Errors;
+using Bookings.Domain.Common.ValueObjects;
+using Bookings.Domain.UserAggregate;
 using ErrorOr;
 using MediatR;
-using Bookings.Domain.UserAggregate;
-using Bookings.Application.Common.Interfaces.Authentication;
-using Bookings.Domain.UserAggregate.ValueObjects;
 
-namespace Bookings.Application.Authentication.Commands.Register
+namespace Bookings.Application.Authentication.Commands.RegisterClient
 {
-    public class RegisterCommandHandler(
-        IJwtTokenGenerator jwtTokenGenerator,
-        IUserRepository userRepository) : IRequestHandler<RegisterCommand, ErrorOr<Unit>>
+    public class RegisterClientCommandHandler(IUserRepository userRepository) : IRequestHandler<RegisterClientCommand, ErrorOr<Unit>>
     {
-        private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
         private readonly IUserRepository _userRepository = userRepository;
 
-        public async Task<ErrorOr<Unit>> Handle(RegisterCommand command, CancellationToken cancellationToken)
+        public async Task<ErrorOr<Unit>> Handle(RegisterClientCommand command, CancellationToken cancellationToken)
         {
             var email = Email.Create(command.Email);
             if (await _userRepository.GetByEmailAsync(email) is not null)

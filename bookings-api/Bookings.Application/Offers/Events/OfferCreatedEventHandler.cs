@@ -13,8 +13,9 @@ namespace Bookings.Application.Offers.Events
         {
             var offer = notification.Offer;
 
+            // Improve error handling
             if (await _employeeRepository.GetByIdAsync(offer.EmployeeId) is not Employee employee)
-                throw new Exception($"No employee with EmployeeId: {offer.EmployeeId}."); // TODO: Ogarnąć lepszy error handling
+                throw new Exception($"No employee with EmployeeId: {offer.EmployeeId}.");
 
             employee.AddOfferId(offer.Id);
             _employeeRepository.Update(employee);

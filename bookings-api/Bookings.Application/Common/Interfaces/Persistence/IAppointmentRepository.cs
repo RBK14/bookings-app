@@ -11,5 +11,4 @@ namespace Bookings.Application.Common.Interfaces.Persistence
         void Update(Appointment appointment);
         void Delete(Appointment appointment);
     }
-
 }

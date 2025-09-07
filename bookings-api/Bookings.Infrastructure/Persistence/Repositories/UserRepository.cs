@@ -1,4 +1,5 @@
 ﻿using Bookings.Application.Common.Interfaces.Persistence;
+using Bookings.Domain.Common.ValueObjects;
 using Bookings.Domain.UserAggregate;
 using Bookings.Domain.UserAggregate.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -14,12 +15,15 @@ namespace Bookings.Infrastructure.Persistence.Repositories
 
         public async Task<User?> GetByIdAsync(UserId userId)
         {
-            return await _dbContext.Users.FindAsync(userId);
+            return await _dbContext.Users
+                .Include(u => u.VerificationTokenIds)
+                .SingleOrDefaultAsync(u => u.Id == userId);
         }
 
         public async Task<User?> GetByEmailAsync(Email email)
         {
             return await _dbContext.Users
+                .Include(u => u.VerificationTokenIds)
                 .SingleOrDefaultAsync(u => u.Email.Value == email.Value);
         }
 

@@ -5,6 +5,7 @@ using Bookings.Domain.EmployeeAggregate;
 using Bookings.Domain.OfferAggregate;
 using Bookings.Domain.ScheduleAggregate;
 using Bookings.Domain.UserAggregate;
+using Bookings.Domain.VerificationTokenAggregate;
 using Bookings.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,6 +27,7 @@ namespace Bookings.Infrastructure.Persistence
         public DbSet<Employee> Employees { get; set; } = null!;
         public DbSet<Client> Clients { get; set; } = null!;
         public DbSet<Schedule> Schedules { get; set; } = null!;
+        public DbSet<VerificationToken> VerificationTokens { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

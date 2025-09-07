@@ -2,7 +2,7 @@
 using Bookings.Domain.Common.Models;
 using System.Text.RegularExpressions;
 
-namespace Bookings.Domain.UserAggregate.ValueObjects
+namespace Bookings.Domain.Common.ValueObjects
 {
     public sealed class Email : ValueObject
     {

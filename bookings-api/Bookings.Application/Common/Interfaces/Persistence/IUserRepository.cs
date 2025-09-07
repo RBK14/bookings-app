@@ -1,4 +1,5 @@
-﻿using Bookings.Domain.UserAggregate;
+﻿using Bookings.Domain.Common.ValueObjects;
+using Bookings.Domain.UserAggregate;
 using Bookings.Domain.UserAggregate.ValueObjects;
 
 namespace Bookings.Application.Common.Interfaces.Persistence

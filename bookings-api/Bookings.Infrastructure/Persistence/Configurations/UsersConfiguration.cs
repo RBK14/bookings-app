@@ -11,6 +11,12 @@ namespace Bookings.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
+            ConfigureUsersTable(builder);
+            ConfigureUserVerificationTokens(builder);
+        }
+
+        private void ConfigureUsersTable(EntityTypeBuilder<User> builder)
+        {
             builder.ToTable("Users");
 
             builder.HasKey(u => u.Id);
@@ -51,15 +57,32 @@ namespace Bookings.Infrastructure.Persistence.Configurations
                     value => Enum.Parse<UserRole>(value))
                 .IsUnicode(false);
 
-            builder.Property(u => u.IsEmailConfirmed);
-
-            builder.Property(u => u.ConfirmationCode)
-                .HasMaxLength(6)
-                .IsUnicode(false)
-                .IsRequired(false);
+            builder.Property(u => u.IsEmailVerified);
 
             builder.Property(u => u.CreatedAt);
             builder.Property(u => u.UpdatedAt);
+        }
+
+        private static void ConfigureUserVerificationTokens(EntityTypeBuilder<User> builder)
+        {
+            builder.OwnsMany(u => u.VerificationTokenIds, vtb =>
+            {
+                vtb.ToTable("UserVerificationTokenIds");
+
+                vtb.WithOwner().HasForeignKey("UserId");
+
+                vtb.Property<int>("Id")
+                    .UseIdentityColumn(seed: 1000, increment: 1);
+
+                vtb.HasKey("Id");
+
+                vtb.Property(v => v.Value)
+                    .ValueGeneratedNever()
+                    .HasColumnName("VerificationTokenId");
+            });
+
+            builder.Metadata.FindNavigation(nameof(User.VerificationTokenIds))!
+                .SetPropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }
