@@ -1,35 +1,29 @@
-﻿using Bookings.Application.Common.Interfaces.Persistence;
-using Bookings.Application.Authentication.Common;
+﻿using Bookings.Application.Authentication.Common;
+using Bookings.Application.Common.Interfaces.Authentication;
+using Bookings.Application.Common.Interfaces.Persistence;
+using Bookings.Domain.ClientAggregate;
 using Bookings.Domain.Common.Errors;
+using Bookings.Domain.Common.ValueObjects;
+using Bookings.Domain.EmployeeAggregate;
+using Bookings.Domain.UserAggregate;
+using Bookings.Domain.UserAggregate.Enums;
 using ErrorOr;
 using MediatR;
-using Bookings.Domain.UserAggregate;
-using Bookings.Application.Common.Interfaces.Authentication;
-using Bookings.Domain.UserAggregate.Enums;
-using Bookings.Domain.ClientAggregate;
-using Bookings.Domain.EmployeeAggregate;
-using Bookings.Domain.Common.ValueObjects;
 
 namespace Bookings.Application.Authentication.Queries.Login
 {
-    public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<string>>
+    public class LoginQueryHandler(
+        IJwtTokenGenerator jwtTokenGenerator,
+        IUserRepository userRepository,
+        IClientRepository clientRepository,
+        IEmployeeRepository employeeRepository,
+        IPasswordHasher passwordHasher) : IRequestHandler<LoginQuery, ErrorOr<string>>
     {
-        private readonly IJwtTokenGenerator _jwtTokenGenerator;
-        private readonly IUserRepository _userRepository;
-        private readonly IClientRepository _clientRepository;
-        private readonly IEmployeeRepository _employeeRepository;
-
-        public LoginQueryHandler(
-            IJwtTokenGenerator jwtTokenGenerator,
-            IUserRepository userRepository,
-            IClientRepository clientRepository,
-            IEmployeeRepository employeeRepository)
-        {
-            _jwtTokenGenerator = jwtTokenGenerator;
-            _userRepository = userRepository;
-            _clientRepository = clientRepository;
-            _employeeRepository = employeeRepository;
-        }
+        private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
+        private readonly IUserRepository _userRepository = userRepository;
+        private readonly IClientRepository _clientRepository = clientRepository;
+        private readonly IEmployeeRepository _employeeRepository = employeeRepository;
+        private readonly IPasswordHasher _passwordHasher = passwordHasher;
 
         public async Task<ErrorOr<string>> Handle(LoginQuery query, CancellationToken cancellationToken)
         {
@@ -40,7 +34,7 @@ namespace Bookings.Application.Authentication.Queries.Login
             //if (!user.IsEmailConfirmed)
             //    return Errors.Authentication.EmailNotConfirmed;
 
-            if (!BCrypt.Net.BCrypt.Verify(query.Password, user.PasswordHash))
+            if (!_passwordHasher.Verify(query.Password, user.PasswordHash))
                 return Errors.Authentication.InvalidCredentials;
 
             Guid roleId = Guid.Empty;

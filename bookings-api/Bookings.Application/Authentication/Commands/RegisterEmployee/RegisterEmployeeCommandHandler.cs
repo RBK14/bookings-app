@@ -1,4 +1,5 @@
-﻿using Bookings.Application.Common.Interfaces.Persistence;
+﻿using Bookings.Application.Common.Interfaces.Authentication;
+using Bookings.Application.Common.Interfaces.Persistence;
 using Bookings.Domain.Common.Errors;
 using Bookings.Domain.Common.ValueObjects;
 using Bookings.Domain.UserAggregate;
@@ -12,10 +13,12 @@ namespace Bookings.Application.Authentication.Commands.RegisterEmployee
 {
     public class RegisterEmployeeCommandHandler(
         IVerificationTokenRepository verificationTokenRepository,
-        IUserRepository userRepository) : IRequestHandler<RegisterEmployeeCommand, ErrorOr<Unit>>
+        IUserRepository userRepository,
+        IPasswordHasher passwordHasher) : IRequestHandler<RegisterEmployeeCommand, ErrorOr<Unit>>
     {
         private readonly IVerificationTokenRepository _verificationTokenRepository = verificationTokenRepository;
         private readonly IUserRepository _userRepository = userRepository;
+        private readonly IPasswordHasher _passwordHasher = passwordHasher;
 
         public async Task<ErrorOr<Unit>> Handle(RegisterEmployeeCommand command, CancellationToken cancellationToken)
         {
@@ -35,9 +38,9 @@ namespace Bookings.Application.Authentication.Commands.RegisterEmployee
                 return Errors.Authentication.InvalidEmail;
 
             if (await _userRepository.GetByEmailAsync(email) is not null)
-                 return Errors.User.DuplicateEmail;
+                return Errors.User.DuplicateEmail;
 
-            var passwordHash = BCrypt.Net.BCrypt.HashPassword(command.Password);
+            var passwordHash = _passwordHasher.HashPassword(command.Password);
 
             var user = User.CreateUnique(
                 command.FirstName,

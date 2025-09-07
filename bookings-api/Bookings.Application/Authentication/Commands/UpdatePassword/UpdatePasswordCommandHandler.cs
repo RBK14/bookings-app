@@ -1,4 +1,5 @@
-﻿using Bookings.Application.Common.Interfaces.Persistence;
+﻿using Bookings.Application.Common.Interfaces.Authentication;
+using Bookings.Application.Common.Interfaces.Persistence;
 using Bookings.Domain.Common.Errors;
 using Bookings.Domain.UserAggregate;
 using Bookings.Domain.UserAggregate.ValueObjects;
@@ -7,9 +8,10 @@ using MediatR;
 
 namespace Bookings.Application.Authentication.Commands.UpdatePassword
 {
-    public class UpdatePasswordCommandHandler(IUserRepository userRepository) : IRequestHandler<UpdatePasswordCommand, ErrorOr<Unit>>
+    public class UpdatePasswordCommandHandler(IUserRepository userRepository, IPasswordHasher passwordHasher) : IRequestHandler<UpdatePasswordCommand, ErrorOr<Unit>>
     {
         private readonly IUserRepository _userRepository = userRepository;
+        private readonly IPasswordHasher _passwordHasher = passwordHasher;
 
         public async Task<ErrorOr<Unit>> Handle(UpdatePasswordCommand command, CancellationToken cancellationToken)
         {
@@ -21,10 +23,10 @@ namespace Bookings.Application.Authentication.Commands.UpdatePassword
             if (userId != user.Id)
                 return Errors.User.NoPermissions;
 
-            if (!BCrypt.Net.BCrypt.Verify(command.CurrentPassword, user.PasswordHash))
+            if (!_passwordHasher.Verify(command.CurrentPassword, user.PasswordHash))
                 return Errors.Authentication.InvalidPassword;
 
-            var newPasswordHash = BCrypt.Net.BCrypt.HashPassword(command.NewPassword);
+            var newPasswordHash = _passwordHasher.HashPassword(command.NewPassword);
             user.UpdatePasswordHash(newPasswordHash);
 
             _userRepository.Update(user);

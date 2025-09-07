@@ -58,6 +58,7 @@ namespace Bookings.Infrastructure
 
             services.AddSingleton(Options.Create(jwtSettings));
             services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+            services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
