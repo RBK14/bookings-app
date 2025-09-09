@@ -8,7 +8,8 @@ namespace Bookings.Application.Authentication.Commands.RegisterEmployee
         string FirstName,
         string LastName,
         string Email,
+        string Phone,
         string Password,
-        string ConfirmPassword,
-        string Phone) : IRequest<ErrorOr<Unit>>;
+        string ConfirmPassword)
+        : IRequest<ErrorOr<Unit>>;
 }

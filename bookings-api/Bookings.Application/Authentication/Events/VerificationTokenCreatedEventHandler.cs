@@ -31,7 +31,7 @@ namespace Bookings.Application.Authentication.Events
                             <body>
                                 <h2>Witaj!</h2>
                                 <p>Kliknij link, aby aktywować konto:</p>
-                                <p><a href='https://localhost:5173/verify/{tokenId}'>Aktywuj konto</a></p>
+                                <p><a href='http://localhost:5173/verify/{tokenId}'>Aktywuj konto</a></p>
                             </body>
                         </html>";
                     break;
@@ -43,7 +43,7 @@ namespace Bookings.Application.Authentication.Events
                             <body>
                                 <h2>Witaj!</h2>
                                 <p>Kliknij link, aby zarejestrować konto pracownika:</p>
-                                <p><a href='https://twojadomena.com/employee-register/{tokenId}'>Zarejestruj konto</a></p>
+                                <p><a href='http://localhost:5173/register/{tokenId}'>Zarejestruj konto</a></p>
                             </body>
                         </html>";
                     break;
@@ -55,7 +55,7 @@ namespace Bookings.Application.Authentication.Events
                             <body>
                                 <h2>Witaj!</h2>
                                 <p>Kliknij link, aby zresetować hasło:</p>
-                                <p><a href='https://twojadomena.com/restore-password/{tokenId}'>Zresetuj hasło</a></p>
+                                <p><a href='http://localhost:5173/restore-password/{tokenId}'>Zresetuj hasło</a></p>
                             </body>
                         </html>";
                     break;
