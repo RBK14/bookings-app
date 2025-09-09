@@ -1,18 +1,37 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom'
-import Home from './pages/Home'
-import Offers from './pages/Offers'
-import About from './pages/About'
-import Contact from './pages/Contact'
-import Login from './pages/Login'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import RegisterClient from './pages/RegisterClient';
+import RegisterEmployee from './pages/RegisterEmployee';
+import Home from './pages/Home';
 
-const App = () => {
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+function App() {
   return (
-    <div className='mx-4 sm:mx-[10%]'>
+    <Router>
+      <Routes>
+        {/* Strona startowa */}
+        <Route path="/" element={<Home />} />
 
-      
-    </div>
-  )
+        {/* Rejestracja klienta */}
+        <Route path="/register" element={<RegisterClient />} />
+
+        {/* Rejestracja pracownika */}
+        <Route path="/register/:token" element={<RegisterEmployee />} />
+      </Routes>
+
+    <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+      />
+
+    </Router>
+  );
 }
 
-export default App
+export default App;
