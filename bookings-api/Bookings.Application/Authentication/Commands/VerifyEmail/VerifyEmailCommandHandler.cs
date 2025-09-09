@@ -18,7 +18,7 @@ namespace Bookings.Application.Authentication.Commands.VerifyEmail
         public async Task<ErrorOr<Unit>> Handle(VerifyEmailCommand command, CancellationToken cancellationToken)
         {
             var tokenId = VerificationTokenId.Create(command.TokenId);
-            if (await _verificationTokenRepository.GetById(tokenId) is not VerificationToken token)
+            if (await _verificationTokenRepository.GetByIdAsync(tokenId) is not VerificationToken token)
                 return Errors.Authentication.InvalidVerificationToken;
 
             if (token.IsExpired)

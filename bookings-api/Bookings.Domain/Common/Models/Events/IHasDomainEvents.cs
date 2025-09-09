@@ -1,4 +1,4 @@
-﻿namespace Bookings.Domain.Common.Models
+﻿namespace Bookings.Domain.Common.Models.Events
 {
     public interface IHasDomainEvents
     {

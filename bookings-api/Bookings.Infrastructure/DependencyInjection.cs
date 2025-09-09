@@ -27,6 +27,7 @@ namespace Bookings.Infrastructure
                 .AddPersistence(configuration);
 
             services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+            services.AddSingleton<IMailSender, MailSender>();
 
             return services;
         }

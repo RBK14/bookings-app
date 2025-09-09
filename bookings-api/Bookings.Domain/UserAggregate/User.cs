@@ -77,10 +77,10 @@ namespace Bookings.Domain.UserAggregate
                 DateTime.UtcNow);
 
             if (role == UserRole.Client)
-                user.AddDomainEvent(new ClientCreatedEvent(user));
+                user.AddDomainEvent(new UserForClientCreatedEvent(user));
 
             if (role == UserRole.Employee)
-                user.AddDomainEvent(new EmployeeCreatedEvent(user));
+                user.AddDomainEvent(new UserForEmployeeCreatedEvent(user));
 
             return user;
         }

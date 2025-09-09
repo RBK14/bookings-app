@@ -12,7 +12,7 @@ namespace Bookings.Infrastructure.Persistence.Repositories
             _dbContext.VerificationTokens.Add(verificationToken);
         }
 
-        public async Task<VerificationToken?> GetById(VerificationTokenId verificationTokenId)
+        public async Task<VerificationToken?> GetByIdAsync(VerificationTokenId verificationTokenId)
         {
             return await _dbContext.VerificationTokens
                 .SingleOrDefaultAsync(vt => vt.Id == verificationTokenId);

@@ -1,5 +1,6 @@
 ﻿using Bookings.Domain.UserAggregate.ValueObjects;
 using Bookings.Domain.VerificationTokenAggregate;
+using Bookings.Domain.VerificationTokenAggregate.Enums;
 using Bookings.Domain.VerificationTokenAggregate.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -33,6 +34,12 @@ namespace Bookings.Infrastructure.Persistence.Configurations
                     id => id! != null! ? id.Value : (Guid?)null,
                     value => value.HasValue ? UserId.Create(value.Value) : null
                 );
+
+            builder.Property(u => u.Type)
+                .HasConversion(
+                    currency => currency.ToString(),
+                    value => Enum.Parse<VerificationTokenType>(value))
+                .IsUnicode(false);
 
             builder.Property(t => t.ExpiresAt);
 

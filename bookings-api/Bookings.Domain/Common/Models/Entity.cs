@@ -1,4 +1,6 @@
-﻿namespace Bookings.Domain.Common.Models
+﻿using Bookings.Domain.Common.Models.Events;
+
+namespace Bookings.Domain.Common.Models
 {
     public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
         where TId : notnull

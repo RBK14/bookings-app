@@ -1,6 +1,6 @@
 ﻿using Bookings.Domain.AppointmentAggregate;
 using Bookings.Domain.ClientAggregate;
-using Bookings.Domain.Common.Models;
+using Bookings.Domain.Common.Models.Events;
 using Bookings.Domain.EmployeeAggregate;
 using Bookings.Domain.OfferAggregate;
 using Bookings.Domain.ScheduleAggregate;

@@ -4,6 +4,7 @@ using Bookings.Application.Authentication.Commands.RegisterEmployee;
 using Bookings.Application.Authentication.Commands.UpdatePassword;
 using Bookings.Application.Authentication.Queries.Login;
 using Bookings.Contracts.Authentication;
+using Bookings.Domain.VerificationTokenAggregate;
 using Mapster;
 
 namespace Bookings.Api.Common.Mapping
@@ -25,6 +26,10 @@ namespace Bookings.Api.Common.Mapping
             config.NewConfig<(UpdatePasswordRequest Request, string UserId), UpdatePasswordCommand>()
                 .Map(dest => dest.UserId, src => src.UserId)
                 .Map(dest => dest, src => src.Request);
+
+            config.NewConfig<VerificationToken, VerificationTokenResponse>()
+                .Map(dest => dest.Id, src => src.Id.Value)
+                .Map(dest => dest.Email, src => src.Email.Value);
         }
     }
 }

@@ -3,9 +3,11 @@ using Bookings.Application.Authentication.Commands.RegisterClient;
 using Bookings.Application.Authentication.Commands.RegisterEmployee;
 using Bookings.Application.Authentication.Commands.UpdatePassword;
 using Bookings.Application.Authentication.Commands.VerifyEmail;
+using Bookings.Application.Authentication.Queries.GetVerificationToken;
 using Bookings.Application.Authentication.Queries.Login;
 using Bookings.Contracts.Authentication;
 using Bookings.Domain.Common.Errors;
+using ErrorOr;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -102,6 +104,17 @@ namespace Bookings.Api.Controllers
                 _ => Ok(),
                 errors => Problem(errors)
             );
+        }
+
+        [HttpGet("tokens/{id}")]
+        public async Task<IActionResult> GetVerificationToken(string id)
+        {
+            var query = new GetVerificationTokenQuery(id);
+            var result = await _mediator.Send(query);
+
+            return result.Match(
+                token => Ok(_mapper.Map<VerificationTokenResponse>(token)),
+                errors => Problem(errors));
         }
     }
 }
